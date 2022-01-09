@@ -1,0 +1,32 @@
+server:
+  port: 8080
+  servlet:
+    context-path: /
+
+spring:
+  datasource:
+    type: com.alibaba.druid.pool.DruidDataSource
+    druid:
+      url: jdbc:mysql://localhost:3306/etest?serverTimezone=GMT%2B8&characterEncoding=utf8&useSSL=false
+      username: root
+      password: 123456
+      driverClassName: com.mysql.jdbc.Driver
+      initial-size: 5
+      min-idle: 5
+      max-active: 20
+      test-while-idle: true
+      test-on-borrow: false
+      test-on-return: false
+      pool-prepared-statements: true
+      max-pool-prepared-statement-per-connection-size: 20
+      max-wait: 60000
+      time-between-eviction-runs-millis: 60000
+      min-evictable-idle-time-millis: 30000
+      filters: stat
+      async-init: true
+
+mybatis-plus:
+  configuration:
+    map-underscore-to-camel-case: false
+    mapper-locations:
+      - classpath*:/mapper/*.xml
