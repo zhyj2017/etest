@@ -27,7 +27,7 @@ public class QuestionController {
     @ResponseBody
     public Response showQuestion(@RequestBody Map<String,Object> map){
         int type = Integer.valueOf(map.get("type").toString());
-        int aid = Integer.valueOf(map.get("aid").toString());
+        long aid = Long.valueOf(map.get("aid").toString());
         List<Question> questions = questionService.getQuestionsByType(aid, type);
         Response response = new Response();
         response = new Response(response.SUCCESS,"",questions);

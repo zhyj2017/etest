@@ -18,7 +18,7 @@ public class QuestionServiceImpl implements QuestionService {
         questionMapper.insert(question);
     }
 
-    public List<Question> getQuestionsByType(int aid, int type){
+    public List<Question> getQuestionsByType(long aid, int type){
         return questionMapper.selectList(new QueryWrapper<Question>().eq("type", type).eq("aid",aid));
     }
 
