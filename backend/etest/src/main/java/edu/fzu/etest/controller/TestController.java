@@ -22,6 +22,23 @@ public class TestController {
     GradeService gradeService;
     @Autowired
     PaperQuestionService paperQuestionService;
+    @Autowired
+    QuestionService questionService;
+
+    @RequestMapping(value = "/ShowQuestion",produces = "application/json;charset=utf-8",method= RequestMethod.POST)
+    @ResponseBody
+    public Response showQuestion(@RequestBody Map<String,Object> map){
+        long aid = Long.valueOf(map.get("id").toString());
+        int type = Integer.valueOf("type");
+        int pageNum = Integer.valueOf("pageNum");
+        int pageSize = Integer.valueOf("pageSize");
+        //List<Paper> papers = paperService.list(aid);
+        List<Question> questions = questionService.getQuestionsByTypeAndPage(aid,type,pageNum,pageSize);
+        Map<String,Object> map1 = new HashMap<>();
+        map1.put("questions",questions);
+        Response response = new Response(200,"",map1);
+        return response;
+    }
 
     @RequestMapping(value = "/AddQuesToPaper",produces = "application/json;charset=utf-8",method= RequestMethod.POST)
     @ResponseBody
@@ -43,7 +60,10 @@ public class TestController {
     @ResponseBody
     public Response showPaper(@RequestBody Map<String,Object> map){
         long aid = Long.valueOf(map.get("id").toString());
-        List<Paper> papers = paperService.list(aid);
+        int pageNum = Integer.valueOf("pageNum");
+        int pageSize = Integer.valueOf("pageSize");
+        //List<Paper> papers = paperService.list(aid);
+        List<Paper> papers = paperService.listByPage(aid,pageNum,pageSize);
         Map<String,Object> map1 = new HashMap<>();
         map1.put("papers",papers);
         Response response = new Response(200,"",map1);
@@ -73,10 +93,15 @@ public class TestController {
 //        return response;
 //    }
 
-    @RequestMapping(value = "/AddTest",produces = "application/json;charset=utf-8",method= RequestMethod.POST)
+    @RequestMapping(value = "/ShowScore",produces = "application/json;charset=utf-8",method= RequestMethod.POST)
     @ResponseBody
-    public Response showScore(@RequestBody Grade grade){
-        List<Grade> grades = gradeService.list(grade);
+    public Response showScore(@RequestBody Map<String,Object> map){
+        //List<Grade> grades = gradeService.list(grade);
+        long cid = Long.valueOf(map.get("cid").toString());
+        long tid = Long.valueOf(map.get("tid").toString());
+        int pageNum = Integer.valueOf(map.get("pageNum").toString());
+        int pageSize = Integer.valueOf(map.get("pageSize").toString());
+        List<Grade> grades = gradeService.listByPage(cid,tid,pageNum,pageSize);
         Map<String,Object> map1 = new HashMap<>();
         map1.put("grades",grades);
         Response response = new Response(200,"",map1);

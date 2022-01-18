@@ -1,6 +1,7 @@
 package edu.fzu.etest.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import edu.fzu.etest.bean.Grade;
 import edu.fzu.etest.mapper.GradeMapper;
 import edu.fzu.etest.service.GradeService;
@@ -18,8 +19,12 @@ public class GradeServiceImpl implements GradeService {
         gradeMapper.insert(grade);
     }
 
-    public List<Grade> list(Grade grade){
-        return gradeMapper.selectList(new QueryWrapper<Grade>().eq("cid", grade.getCid()).eq("pid",grade.getPid()));
+    public List<Grade> list(long cid, long tid){
+        return gradeMapper.selectList(new QueryWrapper<Grade>().eq("cid", cid).eq("tid",tid));
+    }
+
+    public List<Grade> listByPage(long cid, long tid, int pageNum, int pageSize){
+        return gradeMapper.selectPage(new Page<Grade>(pageNum,pageSize),new QueryWrapper<Grade>().eq("cid", cid).eq("tid",tid)).getRecords();
     }
 
 }
