@@ -21,4 +21,9 @@ public class AdminServiceImpl implements AdminService {
         adminMapper.updateById(admin);
     }
 
+    public void add(Admin admin){
+        adminMapper.insert(admin);
+    }
+
+
 }

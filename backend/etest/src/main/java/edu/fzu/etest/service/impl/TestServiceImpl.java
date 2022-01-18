@@ -11,7 +11,8 @@ public class TestServiceImpl implements TestService {
     @Autowired
     TestMapper testMapper;
 
-    public void add(Test test){
+    public long add(Test test){
         testMapper.insert(test);
+        return test.getId();
     }
 }
