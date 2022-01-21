@@ -5,18 +5,6 @@
       <el-form-item label="试卷名称">
         <el-input v-model="form.source"></el-input>
       </el-form-item>
-      <el-form-item label="介绍">
-        <el-input v-model="form.description"></el-input>
-      </el-form-item>
-      <el-form-item label="所属学院">
-        <el-input v-model="form.institute"></el-input>
-      </el-form-item>
-      <el-form-item label="所属专业">
-        <el-input v-model="form.major"></el-input>
-      </el-form-item>
-      <el-form-item label="年级">
-        <el-input v-model="form.grade"></el-input>
-      </el-form-item>
       <el-form-item label="考试日期">
         <el-col :span="11">
           <el-date-picker placeholder="选择日期" v-model="form.examDate" style="width: 100%;"></el-date-picker>
@@ -45,15 +33,9 @@ export default {
     return {
       form: { //表单数据初始化
         source: null,
-        description: null,
-        institute: null,
-        major: null,
-        grade: null,
         examDate: null,
         totalTime: null,
         totalScore: null,
-        type: null,
-        tips: null,
         paperId: null,
       }
     };

@@ -15,18 +15,24 @@ const state = {
     },
     {
       index: '2',
-      title: '题库管理',
+      title: '试卷管理',
       icon: 'icon-tiku',
-      content:[{item1:'功能介绍',path:'/answerDescription'},{item2:'所有题库',path:'/selectAnswer'},{item3:'增加题库',path:'/addAnswer'},{path: '/addAnswerChildren'}],
+      content:[{item1:'功能介绍',path:'/answerDescription'},{item2:'所有试卷',path:'/selectAnswer'},{item3:'增加试卷',path:'/addAnswerChildren'},{path: '/addAnswerChildren'}],
     },
     {
       index: '3',
+      title: '题目管理',
+      icon: 'el-icon-s-order',
+      content:[{item1:'题目查询',path:'/addQuestion'},{item2:'增加题目',path:'/addQuestion'}],
+    },
+    {
+      index: '4',
       title: '成绩查询',
       icon: 'icon-performance',
       content:[{item1:'学生成绩查询',path:'/allStudentsGrade'}],
     },
     {
-      index: '4',
+      index: '5',
       title: '学生管理',
       icon: 'icon-role',
       content:[{item1:'学生管理',path:'/studentManage'},{item2: '添加学生',path: '/addStudent'}],
