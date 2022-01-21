@@ -21,7 +21,17 @@ public class StudentController {
         int pageNum = Integer.valueOf(map.get("pageNum").toString());
         int pageSize = Integer.valueOf(map.get("pageSize").toString());
         List<Student> studentList = studentService.listByPage(pageNum,pageSize);
-        Response response = new Response(200,"",studentList);
+        Map<String,Object> map1 = new HashMap<>();
+        map1.put("students",studentList);
+        Response response = new Response(200,"",map1);
+        return response;
+    }
+
+    @RequestMapping(value = "/Stu/Manage",produces = "application/json;charset=utf-8",method= RequestMethod.POST)
+    @ResponseBody
+    public Response update(@RequestBody Student student){
+        studentService.update(student);
+        Response response = new Response(200,"修改成功",null);
         return response;
     }
 

@@ -1,6 +1,7 @@
 package edu.fzu.etest.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import edu.fzu.etest.bean.Question;
 import edu.fzu.etest.mapper.QuestionMapper;
 import edu.fzu.etest.service.QuestionService;
@@ -20,6 +21,10 @@ public class QuestionServiceImpl implements QuestionService {
 
     public List<Question> getQuestionsByType(long aid, int type){
         return questionMapper.selectList(new QueryWrapper<Question>().eq("type", type).eq("aid",aid));
+    }
+
+    public List<Question> getQuestionsByTypeAndPage(long aid, int type, int pageNum, int pageSize){
+        return questionMapper.selectPage(new Page<Question>(pageNum,pageSize),new QueryWrapper<Question>().eq("aid",aid).eq("type",type)).getRecords();
     }
 
 }

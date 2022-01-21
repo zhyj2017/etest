@@ -1,6 +1,7 @@
 package edu.fzu.etest.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import edu.fzu.etest.bean.Student;
 import edu.fzu.etest.mapper.StudentMapper;
@@ -26,5 +27,10 @@ public class StudentServiceImpl implements StudentService {
         students = studentMapper.selectPage(new Page<Student>(pageNum,pageSize),null).getRecords();
         return students;
     }
+
+    public void update(Student student){
+        studentMapper.update(null, new UpdateWrapper<Student>().eq("id",student.getId()).set("sphone",student.getSphone()).set("password",student.getPassword()));
+    }
+
 
 }
