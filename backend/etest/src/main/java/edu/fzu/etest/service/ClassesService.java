@@ -8,5 +8,5 @@ import java.util.List;
 @Service
 public interface ClassesService {
     void AddClass(Classes classes);
-    List<Classes> CheckClass(long id);
+    List<Classes> CheckClass(long aid);
 }
