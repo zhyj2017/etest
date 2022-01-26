@@ -11,4 +11,6 @@ public interface QuestionService {
     List<Question> getQuestionsByType(long aid, int type); //获取不同类型的问题
     List<Question> getQuestionsByTypeAndPage(long aid, int type, int pageNum, int pageSize); //分页获取不同类型的问题
     List<Question> getQuestionById(List<Long> qids);//根据qid列表获取问题
+    void update(Question question);//修改问题
+    boolean delete(long qid); //删除问题
 }

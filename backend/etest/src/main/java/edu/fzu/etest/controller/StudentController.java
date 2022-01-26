@@ -36,9 +36,18 @@ public class StudentController {
         return response;
     }
 
+    @RequestMapping(value = "/Stu/ShowDetail",produces = "application/json;charset=utf-8",method= RequestMethod.POST)
+    @ResponseBody
+    public Response showDetail(@RequestBody Map<String,Object> map){   //学生查看个人信息
+        long sid = Long.valueOf(map.get("sid").toString());
+        Student student = studentService.getStudentById(sid);
+        Response response = new Response(200,"",student);
+        return response;
+    }
+
     @RequestMapping(value = "/Stu/Manage",produces = "application/json;charset=utf-8",method= RequestMethod.POST)
     @ResponseBody
-    public Response update(@RequestBody Student student){
+    public Response update(@RequestBody Student student){   //学生修改个人信息
         studentService.update(student);
         Response response = new Response(200,"修改成功",null);
         return response;

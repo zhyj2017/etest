@@ -26,62 +26,10 @@ public class TestController {
     @Autowired
     QuestionService questionService;
 
-    @RequestMapping(value = "/AddQuestion",produces = "application/json;charset=utf-8",method= RequestMethod.POST)
-    @ResponseBody
-    public Response add(@RequestBody Question question){
-        questionService.add(question);
-        Response response = new Response(200,"添加成功",null);
-        return response;
-    }
-
-    @RequestMapping(value = "/ShowQuestion",produces = "application/json;charset=utf-8",method= RequestMethod.POST)
-    @ResponseBody
-    public Response showQuestion(@RequestBody Map<String,Object> map){
-        long aid = Long.valueOf(map.get("id").toString());
-        int type = Integer.valueOf("type");
-        int pageNum = Integer.valueOf("pageNum");
-        int pageSize = Integer.valueOf("pageSize");
-        //List<Paper> papers = paperService.list(aid);
-        List<Question> questions = questionService.getQuestionsByTypeAndPage(aid,type,pageNum,pageSize);
-        Map<String,Object> map1 = new HashMap<>();
-        map1.put("questions",questions);
-        Response response = new Response(200,"",map1);
-        return response;
-    }
-
-    @RequestMapping(value = "/AddQuesToPaper",produces = "application/json;charset=utf-8",method= RequestMethod.POST)
-    @ResponseBody
-    public Response addQuesToPaper(@RequestBody PaperQuestion paperQuestion){
-        paperQuestionService.add(paperQuestion);
-        Response response = new Response(200,"添加成功",null);
-        return response;
-    }
-
-    @RequestMapping(value = "/AddPaper",produces = "application/json;charset=utf-8",method= RequestMethod.POST)
-    @ResponseBody
-    public Response addPaper(@RequestBody Paper paper){
-        paperService.add(paper);
-        Response response = new Response(200,"添加成功",null);
-        return response;
-    }
-
-    @RequestMapping(value = "/ShowPaper",produces = "application/json;charset=utf-8",method= RequestMethod.POST)
-    @ResponseBody
-    public Response showPaper(@RequestBody Map<String,Object> map){
-        long aid = Long.valueOf(map.get("id").toString());
-        int pageNum = Integer.valueOf("pageNum");
-        int pageSize = Integer.valueOf("pageSize");
-        //List<Paper> papers = paperService.list(aid);
-        List<Paper> papers = paperService.listByPage(aid,pageNum,pageSize);
-        Map<String,Object> map1 = new HashMap<>();
-        map1.put("papers",papers);
-        Response response = new Response(200,"",map1);
-        return response;
-    }
 
     @RequestMapping(value = "/AddTest",produces = "application/json;charset=utf-8",method= RequestMethod.POST)
     @ResponseBody
-    public Response addTest(@RequestBody Map<String,Object> map){
+    public Response addTest(@RequestBody Map<String,Object> map){  //管理员添加考试
         Test test = new Test();
         String tname = map.get("tname").toString();
         String starttime = map.get("starttime").toString();
@@ -106,13 +54,53 @@ public class TestController {
         test.setCid(cid);
         test.setPid(pid);
         test.setAid(aid);
-        long tid = testService.add(test);
-        Map<String,Object> map1 = new HashMap<>();
-        map1.put("tid",tid);
-        Response response = new Response(200,"",map1);
+        testService.add(test);
+        Response response = new Response(200,"添加成功",null);
         return response;
     }
 
+    @RequestMapping(value = "/UpdateTest",produces = "application/json;charset=utf-8",method= RequestMethod.POST)
+    @ResponseBody
+    public Response updateTest(@RequestBody Map<String,Object> map){  //管理员修改考试
+        Test test = new Test();
+        long id = Long.valueOf(map.get("id").toString());
+        String tname = map.get("tname").toString();
+        String starttime = map.get("starttime").toString();
+        String endtime = map.get("endtime").toString();
+        String description = map.get("description").toString();
+        long pid = Long.valueOf(map.get("pid").toString());
+        long cid = Long.valueOf(map.get("cid").toString());
+        long aid = Long.valueOf(map.get("aid").toString());
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        Date sdate = null;
+        Date edate = null;
+        try{
+            sdate = sdf.parse(starttime);
+            edate = sdf.parse(endtime);
+        } catch (Exception e){
+            e.printStackTrace();
+        }
+        test.setId(id);
+        test.setTname(tname);
+        test.setStarttime(sdate);
+        test.setEndtime(edate);
+        test.setDescription(description);
+        test.setCid(cid);
+        test.setPid(pid);
+        test.setAid(aid);
+        testService.update(test);
+        Response response = new Response(200,"修改成功",null);
+        return response;
+    }
+
+    @RequestMapping(value = "/DeleteTest",produces = "application/json;charset=utf-8",method= RequestMethod.POST)
+    @ResponseBody
+    public Response deleteTest(@RequestBody Map<String,Object> map){   //管理员删除考试
+        long tid = Long.valueOf(map.get("tid").toString());
+        testService.delete(tid);
+        Response response = new Response(200,"删除成功",null);
+        return response;
+    }
 
 //    @RequestMapping(value = "/Mark",produces = "application/json;charset=utf-8",method= RequestMethod.POST)
 //    @ResponseBody
@@ -127,18 +115,5 @@ public class TestController {
 //        return response;
 //    }
 
-    @RequestMapping(value = "/ShowScore",produces = "application/json;charset=utf-8",method= RequestMethod.POST)
-    @ResponseBody
-    public Response showScore(@RequestBody Map<String,Object> map){
-        //List<Grade> grades = gradeService.list(grade);
-        long cid = Long.valueOf(map.get("cid").toString());
-        long tid = Long.valueOf(map.get("tid").toString());
-        int pageNum = Integer.valueOf(map.get("pageNum").toString());
-        int pageSize = Integer.valueOf(map.get("pageSize").toString());
-        List<Grade> grades = gradeService.listByPage(cid,tid,pageNum,pageSize);
-        Map<String,Object> map1 = new HashMap<>();
-        map1.put("grades",grades);
-        Response response = new Response(200,"",map1);
-        return response;
-    }
+
 }

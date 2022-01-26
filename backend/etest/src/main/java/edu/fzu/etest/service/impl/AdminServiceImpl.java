@@ -23,6 +23,11 @@ public class AdminServiceImpl implements AdminService {
         return admin;
     }
 
+    public Admin getAdminById(long aid){
+        Admin admin = adminMapper.selectOne(new QueryWrapper<Admin>().eq("id", aid));
+        return admin;
+    }
+
     public void update(Admin admin){
         adminMapper.updateById(admin);
     }
@@ -31,9 +36,9 @@ public class AdminServiceImpl implements AdminService {
         adminMapper.insert(admin);
     }
 
-    public List<Grade> showAnswer(Long cid, Long pid){
-        List<Grade> gradeList=gradeMapper.selectList(new QueryWrapper<Grade>().eq("cid",cid).eq("pid",pid));
-        return gradeList;
-    }
+//    public List<Grade> showAnswer(Long cid, Long pid){
+//        List<Grade> gradeList=gradeMapper.selectList(new QueryWrapper<Grade>().eq("cid",cid).eq("pid",pid));
+//        return gradeList;
+//    }
 
 }

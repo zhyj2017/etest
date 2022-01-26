@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -20,24 +21,41 @@ public class AdminController {
 
     @RequestMapping(value = "/Manage",produces = "application/json;charset=utf-8",method= RequestMethod.POST)
     @ResponseBody
-    public Response update(@RequestBody Admin admin){
+    public Response update(@RequestBody Admin admin){ //管理员修改个人信息
         adminService.update(admin);
         Response response = new Response(200,"",null);
         return response;
     }
 
-    @RequestMapping(value = "/ShowAnswer",produces = "application/json;charset=utf-8",method= RequestMethod.POST)
+    @RequestMapping(value = "/Regist",produces = "application/json;charset=utf-8",method= RequestMethod.POST)
     @ResponseBody
-    public Response showAnswer(@RequestBody Map<String,Object> map){
-        long cid = Integer.valueOf(map.get("cid").toString());
-        long pid = Long.valueOf(map.get("pid").toString());
-        List<Grade> gradeList=adminService.showAnswer(cid,pid);
-        List<Double>scoreList=null;
-        for(int i=0;i<gradeList.size();i++){
-            scoreList.add(gradeList.get(i).getScore());
-        }
-        Response response = new Response();
-        response = new Response(response.SUCCESS,"",scoreList);
+    public Response add(@RequestBody Admin admin){  //注册管理员
+        adminService.add(admin);
+        Response response = new Response(200,"注册成功",null);
         return response;
     }
+
+    @RequestMapping(value = "/ShowDetail",produces = "application/json;charset=utf-8",method= RequestMethod.POST)
+    @ResponseBody
+    public Response showDetail(@RequestBody Map<String,Object> map){  //管理员查看个人信息
+        long aid = Long.valueOf(map.get("aid").toString());
+        Admin admin = adminService.getAdminById(aid);
+        Response response = new Response(200,"",admin);
+        return response;
+    }
+
+//    @RequestMapping(value = "/ShowAnswer",produces = "application/json;charset=utf-8",method= RequestMethod.POST)
+//    @ResponseBody
+//    public Response showAnswer(@RequestBody Map<String,Object> map){
+//        long cid = Integer.valueOf(map.get("cid").toString());
+//        long pid = Long.valueOf(map.get("pid").toString());
+//        List<Grade> gradeList=adminService.showAnswer(cid,pid);
+//        List<Double>scoreList=null;
+//        for(int i=0;i<gradeList.size();i++){
+//            scoreList.add(gradeList.get(i).getScore());
+//        }
+//        Response response = new Response();
+//        response = new Response(response.SUCCESS,"",scoreList);
+//        return response;
+//    }
 }

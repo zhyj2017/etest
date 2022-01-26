@@ -7,7 +7,6 @@ import edu.fzu.etest.bean.*;
 import edu.fzu.etest.mapper.*;
 import edu.fzu.etest.service.PaperQuestionService;
 import edu.fzu.etest.service.StudentService;
-import edu.fzu.etest.util.DataTimeUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -32,6 +31,11 @@ public class StudentServiceImpl implements StudentService {
 
     public Student getStudentBySno(String sno){
         Student student = studentMapper.selectOne(new QueryWrapper<Student>().eq("sno", sno));
+        return student;
+    }
+
+    public Student getStudentById(long sid){
+        Student student = studentMapper.selectOne(new QueryWrapper<Student>().eq("id", sid));
         return student;
     }
 

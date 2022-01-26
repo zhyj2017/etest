@@ -22,7 +22,7 @@ public class LoginController {
 
     @RequestMapping(value = "/LoginQuest",produces = "application/json;charset=utf-8",method= RequestMethod.POST)
     @ResponseBody
-    public Response login(@RequestBody Map<String,Object> map1){
+    public Response login(@RequestBody Map<String,Object> map1){  //登录
         String no = map1.get("no").toString();
         String password = map1.get("password").toString();
         Response response = new Response();
