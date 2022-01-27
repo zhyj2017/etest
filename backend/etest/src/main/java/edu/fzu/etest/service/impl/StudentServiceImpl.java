@@ -46,7 +46,8 @@ public class StudentServiceImpl implements StudentService {
     }
 
     public void update(Student student){
-        studentMapper.update(null, new UpdateWrapper<Student>().eq("id",student.getId()).set("sphone",student.getSphone()).set("password",student.getPassword()));
+        //studentMapper.update(null, new UpdateWrapper<Student>().eq("id",student.getId()).set("sphone",student.getSphone()).set("password",student.getPassword()));
+        studentMapper.updateById(student);
     }
 
     public List<Student> getStudentBySnoList(List<Long> sidList){
