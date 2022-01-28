@@ -27,10 +27,9 @@ public class QuestionController {
     @ResponseBody
     public Response showQuestion(@RequestBody Map<String,Object> map){  //管理员查看问题
         long aid = Long.valueOf(map.get("aid").toString());
-        int type = Integer.valueOf("type");
-        int pageNum = Integer.valueOf("pageNum");
-        int pageSize = Integer.valueOf("pageSize");
-        //List<Paper> papers = paperService.list(aid);
+        int type = Integer.valueOf(map.get("type").toString());
+        int pageNum = Integer.valueOf(map.get("pageNum").toString());
+        int pageSize = Integer.valueOf(map.get("pageSize").toString());
         List<Question> questions = questionService.getQuestionsByTypeAndPage(aid,type,pageNum,pageSize);
         Map<String,Object> map1 = new HashMap<>();
         map1.put("questions",questions);

@@ -63,9 +63,8 @@ public class TestController {
     @ResponseBody
     public Response showTest(@RequestBody Map<String,Object> map){  //管理员查看考试
         long aid = Long.valueOf(map.get("aid").toString());
-        int pageNum = Integer.valueOf("pageNum");
-        int pageSize = Integer.valueOf("pageSize");
-        //List<Paper> papers = paperService.list(aid);
+        int pageNum = Integer.valueOf(map.get("pageNum").toString());
+        int pageSize = Integer.valueOf(map.get("pageSize").toString());
         List<Test> tests = testService.list(aid,pageNum,pageSize);
         Map<String,Object> map1 = new HashMap<>();
         map1.put("tests",tests);

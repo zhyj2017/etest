@@ -35,6 +35,7 @@ public class LoginController {
                 Map<String,Object> map = new HashMap<>();
                 map.put("type",1);
                 map.put("id",admin.getId());
+                map.put("name",admin.getAname());
                 response = new Response(response.SUCCESS,"登录成功",map);
             }
         }else if (student != null){
@@ -44,6 +45,7 @@ public class LoginController {
                 Map<String,Object> map = new HashMap<>();
                 map.put("type",2);
                 map.put("id",student.getId());
+                map.put("name",student.getSname());
                 response = new Response(response.SUCCESS,"登录成功",map);
             }
         }else {

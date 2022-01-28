@@ -41,9 +41,8 @@ public class PaperController {
     @ResponseBody
     public Response showPaper(@RequestBody Map<String,Object> map){  //管理员查看试卷
         long aid = Long.valueOf(map.get("aid").toString());
-        int pageNum = Integer.valueOf("pageNum");
-        int pageSize = Integer.valueOf("pageSize");
-        //List<Paper> papers = paperService.list(aid);
+        int pageNum = Integer.valueOf(map.get("pageNum").toString());
+        int pageSize = Integer.valueOf(map.get("pageSize").toString());
         List<Paper> papers = paperService.listByPage(aid,pageNum,pageSize);
         Map<String,Object> map1 = new HashMap<>();
         map1.put("papers",papers);

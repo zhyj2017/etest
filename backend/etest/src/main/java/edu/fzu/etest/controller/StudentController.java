@@ -1,10 +1,7 @@
 package edu.fzu.etest.controller;
 
 import edu.fzu.etest.bean.*;
-import edu.fzu.etest.service.PaperQuestionService;
-import edu.fzu.etest.service.QuestionService;
-import edu.fzu.etest.service.StudentClassService;
-import edu.fzu.etest.service.StudentService;
+import edu.fzu.etest.service.*;
 import edu.fzu.etest.util.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -23,6 +20,10 @@ public class StudentController {
     PaperQuestionService paperQuestionService;
     @Autowired
     QuestionService questionService;
+    @Autowired
+    GradeService gradeService;
+    @Autowired
+    AnswerService answerService;
 
     @RequestMapping(value = "/StudentList",produces = "application/json;charset=utf-8",method= RequestMethod.POST)
     @ResponseBody
@@ -89,7 +90,15 @@ public class StudentController {
     @RequestMapping(value = "/Stu/UpPaper",produces = "application/json;charset=utf-8",method= RequestMethod.POST)
     @ResponseBody
     public Response upPaper(@RequestBody List<Answer> answerList){
-        studentService.UpPaper(answerList);
+        double score = answerService.mark(answerList); //批改试卷
+        Grade grade = new Grade();
+        grade.setTid(answerList.get(0).getTid());
+        grade.setSid(answerList.get(0).getSid());
+        grade.setPid(answerList.get(0).getPid());
+        grade.setCid(studentClassService.ShowClassId(answerList.get(0).getSid()));
+        grade.setScore(score);
+        gradeService.add(grade);     //添加成绩
+        studentService.UpPaper(answerList);  //保存答案
         Response response = new Response(200,"提交成功",null);
         return response;
     }
