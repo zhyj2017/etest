@@ -17,13 +17,13 @@ const state = {
       index: '2',
       title: '试卷管理',
       icon: 'icon-tiku',
-      content:[{item1:'功能介绍',path:'/answerDescription'},{item2:'所有试卷',path:'/selectAnswer'},{item3:'增加试卷',path:'/addAnswerChildren'},{path: '/addAnswerChildren'}],
+      content:[{item1:'功能介绍',path:'/answerDescription'},{item2:'所有试卷',path:'/selectAnswer'},{item3:'增加试卷',path:'/addAnswer'}],
     },
     {
       index: '3',
       title: '题目管理',
       icon: 'el-icon-s-order',
-      content:[{item1:'题目查询',path:'/addQuestion'},{item2:'增加题目',path:'/addQuestion'}],
+      content:[{item1:'题目查询',path:'/selectQuestion'},{item2:'增加题目',path:'/addQuestion'}],
     },
     {
       index: '4',
