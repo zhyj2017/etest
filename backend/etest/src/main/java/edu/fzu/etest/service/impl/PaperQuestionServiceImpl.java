@@ -1,5 +1,6 @@
 package edu.fzu.etest.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import edu.fzu.etest.bean.PaperQuestion;
 import edu.fzu.etest.mapper.PaperQuestionMapper;
 import edu.fzu.etest.service.PaperQuestionService;
@@ -21,5 +22,9 @@ public class PaperQuestionServiceImpl implements PaperQuestionService {
         for (int i=0;i<paperQuestionList.size();i++){
             paperQuestionMapper.insert(paperQuestionList.get(i));
         }
+    }
+    public List<PaperQuestion> getQuestionId(Long pid){
+        List<PaperQuestion> paperQuestionList=paperQuestionMapper.selectList(new QueryWrapper<PaperQuestion>().eq("pid",pid));
+        return paperQuestionList;
     }
 }

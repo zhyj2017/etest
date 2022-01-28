@@ -2,7 +2,11 @@ package edu.fzu.etest.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import edu.fzu.etest.bean.Paper;
+import edu.fzu.etest.bean.PaperQuestion;
 import edu.fzu.etest.bean.Question;
+import edu.fzu.etest.mapper.PaperMapper;
+import edu.fzu.etest.mapper.PaperQuestionMapper;
 import edu.fzu.etest.mapper.QuestionMapper;
 import edu.fzu.etest.service.QuestionService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +18,8 @@ import java.util.List;
 public class QuestionServiceImpl implements QuestionService {
     @Autowired
     QuestionMapper questionMapper;
+    @Autowired
+    PaperQuestionMapper paperQuestionMapper;
 
     public void add(Question question){
         questionMapper.insert(question);
@@ -27,4 +33,22 @@ public class QuestionServiceImpl implements QuestionService {
         return questionMapper.selectPage(new Page<Question>(pageNum,pageSize),new QueryWrapper<Question>().eq("aid",aid).eq("type",type)).getRecords();
     }
 
+    public List<Question> getQuestionById(List<Long> qids){
+        List<Question>questionList= questionMapper.selectBatchIds(qids);
+        return questionList;
+    }
+
+    public void update(Question question){
+        questionMapper.updateById(question);
+    }
+
+    public boolean delete(long qid){
+        PaperQuestion paperQuestion = null;
+        paperQuestion = paperQuestionMapper.selectOne(new QueryWrapper<PaperQuestion>().eq("qid",qid));
+        if (paperQuestion != null){
+            return false;
+        }
+        questionMapper.deleteById(qid);
+        return true;
+    }
 }
