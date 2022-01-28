@@ -16,6 +16,16 @@
       <el-form-item label="总分">
         <el-input v-model="form.totalScore"></el-input>
       </el-form-item>
+      <el-form-item label="班级">
+        <el-select v-model="form.class" placeholder="请选择">
+          <el-option
+            v-for="item in selectclass"
+            :key="item.cid"
+            :label="item.cname"
+            :value="item.cid">
+          </el-option>
+        </el-select>
+      </el-form-item>
       <el-form-item label="考生提示">
         <el-input type="textarea" v-model="form.tips"></el-input>
       </el-form-item>
@@ -37,6 +47,10 @@ export default {
         totalTime: null,
         totalScore: null,
         paperId: null,
+      },
+      selectclass:{
+        cid:null,
+        cname:null,
       }
     };
   },

@@ -22,6 +22,14 @@ export default new Router({
           component: () => import('@/components/teacher/selectExam')
         },
         {
+          path: '/selectQuestion', //查询所有问题
+          component: () => import('@/components/teacher/selectQuestion')
+        },
+        {
+          path: '/addQuestion', //查询所有考试
+          component: () => import('@/components/teacher/addQuestion')
+        },
+        {
           path: '/addExam', //添加考试
           component: () => import('@/components/teacher/addExam')
         },
