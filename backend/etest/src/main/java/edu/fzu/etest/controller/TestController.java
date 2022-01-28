@@ -59,6 +59,20 @@ public class TestController {
         return response;
     }
 
+    @RequestMapping(value = "/ShowTest",produces = "application/json;charset=utf-8",method= RequestMethod.POST)
+    @ResponseBody
+    public Response showTest(@RequestBody Map<String,Object> map){  //管理员查看考试
+        long aid = Long.valueOf(map.get("aid").toString());
+        int pageNum = Integer.valueOf("pageNum");
+        int pageSize = Integer.valueOf("pageSize");
+        //List<Paper> papers = paperService.list(aid);
+        List<Test> tests = testService.list(aid,pageNum,pageSize);
+        Map<String,Object> map1 = new HashMap<>();
+        map1.put("tests",tests);
+        Response response = new Response(200,"",map1);
+        return response;
+    }
+
     @RequestMapping(value = "/UpdateTest",produces = "application/json;charset=utf-8",method= RequestMethod.POST)
     @ResponseBody
     public Response updateTest(@RequestBody Map<String,Object> map){  //管理员修改考试
