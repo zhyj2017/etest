@@ -1,6 +1,7 @@
 package edu.fzu.etest.controller;
 
 import edu.fzu.etest.dto.GradeDTO;
+import edu.fzu.etest.dto.StuGradeDTO;
 import edu.fzu.etest.service.GradeService;
 import edu.fzu.etest.util.Response;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +13,7 @@ import java.util.Map;
 
 @RestController
 public class GradeController {
+
     @Autowired
     GradeService gradeService;
 
@@ -25,6 +27,19 @@ public class GradeController {
         Map<String,Object> map1 = new HashMap<>();
         map1.put("scores",gradeDTOS);
         Response response = new Response(200,"",map1);
+        return response;
+    }
+
+    @RequestMapping(value = "/Stu/ShowScore",produces = "application/json;charset=utf-8",method= RequestMethod.POST)
+    @ResponseBody
+    public Response showScore(@RequestBody Map<String,Object> map){
+        long sid = Long.valueOf(map.get("sid").toString());
+        int pageNum = Integer.valueOf(map.get("pageNum").toString());
+        int pageSize = Integer.valueOf(map.get("pageSize").toString());
+        List<StuGradeDTO> stuGradeDTOS=gradeService.showScore(sid,pageNum,pageSize);
+        Map<String,Object> map1 = new HashMap<>();
+        map1.put("scores",stuGradeDTOS);
+        Response response = new Response(200,"提交成功",map1);
         return response;
     }
 }

@@ -25,6 +25,8 @@ public class TestController {
     PaperQuestionService paperQuestionService;
     @Autowired
     QuestionService questionService;
+    @Autowired
+    StudentClassService studentClassService;
 
 
     @RequestMapping(value = "/AddTest",produces = "application/json;charset=utf-8",method= RequestMethod.POST)
@@ -115,6 +117,51 @@ public class TestController {
         return response;
     }
 
+    @RequestMapping(value = "/Stu/ShowPaper",produces = "application/json;charset=utf-8",method= RequestMethod.POST)
+    @ResponseBody
+    public Response showPaper(@RequestBody Map<String,Object> map){
+        //获取学生sid
+        long sid= Long.valueOf(map.get("sid").toString());
+        int pageNum = Integer.valueOf(map.get("pageNum").toString());
+        int pageSize = Integer.valueOf(map.get("pageSize").toString());
+        //获取学生班级cid
+        Long cid= studentClassService.ShowClassId(sid);
+        //获取考试
+        List<Test> testList=testService.showPaper(cid,pageNum,pageSize);
+        Map<String,Object> map1 = new HashMap<>();
+        map1.put("tests",testList);
+        Response response = new Response(200,"未开始的考试",testList);
+        return response;
+    }
+
+    @RequestMapping(value = "/Stu/ShowTestFin",produces = "application/json;charset=utf-8",method= RequestMethod.POST)
+    @ResponseBody
+    public Response showTestFin(@RequestBody Map<String,Object> map){
+        //获取学生sid
+        long sid= Long.valueOf(map.get("sid").toString());
+        int pageNum = Integer.valueOf(map.get("pageNum").toString());
+        int pageSize = Integer.valueOf(map.get("pageSize").toString());
+        //获取学生班级cid
+        long cid= studentClassService.ShowClassId(sid);
+        //获取考试
+        List<Test> testList=testService.showPaper(cid,pageNum,pageSize);
+        for(int i=0;i<testList.size();i++){
+            //先根据tid和sid查找grade表判断是否为空,查找为空插入成绩为0的数据
+            if(gradeService.showGrade(sid,testList.get(i).getId())==null){
+                Grade grade=new Grade();
+                grade.setCid(cid);
+                grade.setSid(sid);
+                grade.setScore(0);
+                grade.setPid(testList.get(i).getPid());
+                grade.setTid(testList.get(i).getId());
+                gradeService.add(grade);
+            }
+        }
+        Map<String,Object> map1 = new HashMap<>();
+        map1.put("tests",testList);
+        Response response = new Response(200,"已经结束的考试",testList);
+        return response;
+    }
 //    @RequestMapping(value = "/Mark",produces = "application/json;charset=utf-8",method= RequestMethod.POST)
 //    @ResponseBody
 //    public Response Mark(@RequestBody Map<String,Object> map){

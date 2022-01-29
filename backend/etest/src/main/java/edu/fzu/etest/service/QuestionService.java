@@ -13,4 +13,5 @@ public interface QuestionService {
     List<Question> getQuestionById(List<Long> qids);//根据qid列表获取问题
     void update(Question question);//修改问题
     boolean delete(long qid); //删除问题
+
 }

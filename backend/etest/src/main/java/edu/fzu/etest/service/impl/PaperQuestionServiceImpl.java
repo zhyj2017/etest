@@ -27,4 +27,10 @@ public class PaperQuestionServiceImpl implements PaperQuestionService {
         List<PaperQuestion> paperQuestionList=paperQuestionMapper.selectList(new QueryWrapper<PaperQuestion>().eq("pid",pid));
         return paperQuestionList;
     }
+    public List<PaperQuestion> startExam(long sid, long pid)
+    {
+        //先根据试卷pid获取qid
+        List<PaperQuestion>paperQuestionList=paperQuestionMapper.selectList(new QueryWrapper<PaperQuestion>().eq("pid",pid));
+        return paperQuestionList;
+    }
 }

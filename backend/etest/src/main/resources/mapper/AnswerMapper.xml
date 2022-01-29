@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- 使用接口 代理的方式 namespace必须和接口的全路径名称一致 -->
+<mapper namespace="edu.fzu.etest.mapper.AnswerMapper">
+
+    <select id="listAnswer" resultType="edu.fzu.etest.dto.AnswerDTO">
+        SELECT q.id as id,q.title as title,q.optionA as optionA,q.optionB as optionB,q.optionC as optionC,q.optionD as optionD,q.answer as answer,q.analysis as analysis,a.answer as myanswer
+        FROM answer as a,question as q
+        WHERE q.id = a.qid AND a.sid = #{sid} AND a.tid = #{tid}
+    </select>
+
+</mapper>
+

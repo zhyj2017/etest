@@ -4,6 +4,8 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import edu.fzu.etest.bean.Answer;
 import edu.fzu.etest.bean.PaperQuestion;
 import edu.fzu.etest.bean.Question;
+import edu.fzu.etest.dto.AnswerDTO;
+import edu.fzu.etest.mapper.AnswerMapper;
 import edu.fzu.etest.mapper.PaperQuestionMapper;
 import edu.fzu.etest.mapper.QuestionMapper;
 import edu.fzu.etest.service.AnswerService;
@@ -18,6 +20,8 @@ public class AnswerServiceImpl implements AnswerService {
     PaperQuestionMapper paperQuestionMapper;;
     @Autowired
     QuestionMapper questionMapper;
+    @Autowired
+    AnswerMapper answerMapper;
 
     public double mark(List<Answer> answers){
         double score = 0;
@@ -39,5 +43,9 @@ public class AnswerServiceImpl implements AnswerService {
             }
         }
         return score;
+    }
+
+    public List<AnswerDTO> listAnswer(long sid, long tid) {
+        return answerMapper.listAnswer(sid,tid);
     }
 }
