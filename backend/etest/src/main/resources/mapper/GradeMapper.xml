@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- 使用接口 代理的方式 namespace必须和接口的全路径名称一致 -->
+<mapper namespace="edu.fzu.etest.mapper.GradeMapper">
+
+    <select id="listByCid" resultType="edu.fzu.etest.dto.GradeDTO">
+        SELECT g.tid as tid,t.tname as tname,g.sid as sid,s.sno as sno,s.sname as sname,g.score as score
+        FROM student as s,grade as g,test as t
+        WHERE t.id = g.tid AND s.id = g.sid AND g.cid = #{cid}
+    </select>
+
+</mapper>
