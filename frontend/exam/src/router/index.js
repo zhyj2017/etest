@@ -53,6 +53,10 @@ export default new Router({
           path: '/addStudent', //添加学生
           component: () => import('@/components/teacher/addStudent')
         },
+        {
+          path: '/classManage', //班级管理
+          component: () => import('@/components/teacher/classManage')
+        }
       ]
     },
   ]
