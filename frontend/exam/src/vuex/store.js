@@ -35,7 +35,7 @@ const state = {
       index: '5',
       title: '学生管理',
       icon: 'icon-role',
-      content:[{item1:'学生管理',path:'/studentManage'},{item2: '添加学生',path: '/addStudent'},{item3: '班级管理',path: '/classManage'},{item4: '创建班级',path: '/createClass'}],
+      content:[{item1:'学生管理',path:'/studentManage'},{item2: '添加学生',path: '/addStudent'},{item3: '班级管理',path: '/classManage'},{item4: '创建班级',path: '/addClass'}],
     },
   ],
 }

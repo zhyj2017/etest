@@ -46,6 +46,10 @@ export default new Router({
           component: () => import('@/components/teacher/addAnswer')
         },
         {
+          path: '/allStudentsGrade', //查看所有成绩
+          component: () => import('@/components/teacher/allStudentsGrade')
+        },
+        {
           path: '/studentManage', //学生管理界面
           component: () => import('@/components/teacher/studentManage')
         },
@@ -56,6 +60,10 @@ export default new Router({
         {
           path: '/classManage', //班级管理
           component: () => import('@/components/teacher/classManage')
+        },
+        {
+          path: '/addClass', //创建班级
+          component: () => import('@/components/teacher/addClass')
         }
       ]
     },
