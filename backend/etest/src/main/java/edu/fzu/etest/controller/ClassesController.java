@@ -22,6 +22,16 @@ public class ClassesController {
         return response;
     }
 
+    @RequestMapping(value = "/GetClasses",produces = "application/json;charset=utf-8",method= RequestMethod.POST)
+    @ResponseBody
+    public Response getClasses(@RequestBody Map<String,Object> map){  //管理员查看班级(不分页)
+        long aid = Long.valueOf(map.get("aid").toString());
+        List<Classes> classes = classesService.list(aid);
+        Response response = new Response();
+        response = new Response(response.SUCCESS,"",classes);
+        return response;
+    }
+
     @RequestMapping(value = "/CheckClass",produces = "application/json;charset=utf-8",method= RequestMethod.POST)
     @ResponseBody
     public Response checkClass(@RequestBody Map<String,Object> map){

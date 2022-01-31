@@ -21,6 +21,11 @@ public class ClassesServiceImpl implements ClassesService {
     {
          classesMapper.insert(classes);
     }
+
+    public List<Classes> list(long aid){
+        return classesMapper.selectList(new QueryWrapper<Classes>().eq("aid",aid));
+    }
+
     public List<Classes> CheckClass(long aid){
         return classesMapper.selectList(new QueryWrapper<Classes>().eq("aid",aid));
     }

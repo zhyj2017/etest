@@ -45,6 +45,17 @@ public class PaperController {
         return response;
     }
 
+    @RequestMapping(value = "/GetPapers",produces = "application/json;charset=utf-8",method= RequestMethod.POST)
+    @ResponseBody
+    public Response getPaper(@RequestBody Map<String,Object> map){  //管理员查看试卷(不分页)
+        long aid = Long.valueOf(map.get("aid").toString());
+        List<Paper> papers = paperService.list(aid);
+        Map<String,Object> map1 = new HashMap<>();
+        map1.put("papers",papers);
+        Response response = new Response(200,"",map1);
+        return response;
+    }
+
     @RequestMapping(value = "/ShowPaper",produces = "application/json;charset=utf-8",method= RequestMethod.POST)
     @ResponseBody
     public Response showPaper(@RequestBody Map<String,Object> map){  //管理员查看试卷
