@@ -23,6 +23,18 @@ public class QuestionController {
         return response;
     }
 
+    @RequestMapping(value = "/GetQuestions",produces = "application/json;charset=utf-8",method= RequestMethod.POST)
+    @ResponseBody
+    public Response getQuestions(@RequestBody Map<String,Object> map){  //管理员查看问题
+        long aid = Long.valueOf(map.get("aid").toString());
+        int type = Integer.valueOf(map.get("type").toString());
+        List<Question> questions = questionService.getQuestionsByType(aid,type);
+        Map<String,Object> map1 = new HashMap<>();
+        map1.put("questions",questions);
+        Response response = new Response(200,"",map1);
+        return response;
+    }
+
     @RequestMapping(value = "/ShowQuestion",produces = "application/json;charset=utf-8",method= RequestMethod.POST)
     @ResponseBody
     public Response showQuestion(@RequestBody Map<String,Object> map){  //管理员查看问题
