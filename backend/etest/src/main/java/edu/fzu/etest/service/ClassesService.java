@@ -7,7 +7,9 @@ import java.util.List;
 
 @Service
 public interface ClassesService {
-    void AddClass(Classes classes);
+    void addClass(Classes classes);  //添加班级
+    List<Classes> checkClass(long aid,long pageNum,long pageSize);  //分页展示班级
+    void deleteClass(long cid);  //删除班级
+    void updateClass(Classes classes);  //修改班级
     List<Classes> list(long aid);
-    List<Classes> CheckClass(long aid);
 }

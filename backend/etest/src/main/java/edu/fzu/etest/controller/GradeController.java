@@ -23,7 +23,7 @@ public class GradeController {
         long cid = Long.valueOf(map.get("cid").toString());
         int pageNum = Integer.valueOf(map.get("pageNum").toString());
         int pageSize = Integer.valueOf(map.get("pageSize").toString());
-        List<GradeDTO> gradeDTOS = gradeService.listByPage(cid,pageNum,pageSize);
+        List<GradeDTO> gradeDTOS = gradeService.listByCid(cid,pageNum,pageSize);
         Map<String,Object> map1 = new HashMap<>();
         map1.put("scores",gradeDTOS);
         Response response = new Response(200,"",map1);
@@ -36,7 +36,7 @@ public class GradeController {
         long sid = Long.valueOf(map.get("sid").toString());
         int pageNum = Integer.valueOf(map.get("pageNum").toString());
         int pageSize = Integer.valueOf(map.get("pageSize").toString());
-        List<StuGradeDTO> stuGradeDTOS=gradeService.showScore(sid,pageNum,pageSize);
+        List<StuGradeDTO> stuGradeDTOS = gradeService.listBySid(sid,pageNum,pageSize);
         Map<String,Object> map1 = new HashMap<>();
         map1.put("scores",stuGradeDTOS);
         Response response = new Response(200,"提交成功",map1);

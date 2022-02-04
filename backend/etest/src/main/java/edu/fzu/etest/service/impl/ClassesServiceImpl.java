@@ -17,16 +17,25 @@ public class ClassesServiceImpl implements ClassesService {
     @Autowired
     ClassesMapper classesMapper;
 
-    public void AddClass(Classes classes)
+    public void addClass(Classes classes)
     {
-         classesMapper.insert(classes);
+        classesMapper.insert(classes);
+    }
+
+    public List<Classes> checkClass(long aid,long pageNum,long pageSize){
+        return classesMapper.selectPage(new Page<Classes>(pageNum,pageSize),new QueryWrapper<Classes>().eq("aid",aid)).getRecords();
+    }
+
+    public void deleteClass(long cid){
+        classesMapper.delete(new QueryWrapper<Classes>().eq("id",cid));
+    }
+
+    public void updateClass(Classes classes){
+        classesMapper.updateById(classes);
     }
 
     public List<Classes> list(long aid){
         return classesMapper.selectList(new QueryWrapper<Classes>().eq("aid",aid));
     }
 
-    public List<Classes> CheckClass(long aid){
-        return classesMapper.selectList(new QueryWrapper<Classes>().eq("aid",aid));
-    }
 }

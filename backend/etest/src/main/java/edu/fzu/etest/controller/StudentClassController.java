@@ -24,24 +24,36 @@ public class StudentClassController {
     @RequestMapping(value = "/ShowStuInClass",produces = "application/json;charset=utf-8",method= RequestMethod.POST)
     @ResponseBody
     public Response showStuInClass(@RequestBody Map<String,Object> map){
-        long classid=Long.valueOf(map.get("classid").toString());
-        List<StudentClass> studentClasses = studentClassService.ShowStuInClass(classid);
-        List<Long> sidlist=null;
-        for(int i=0;i<studentClasses.size();i++){
-            sidlist.add(studentClasses.get(i).getSid());
+        long aid=Long.valueOf(map.get("aid").toString());
+        long cid=Long.valueOf(map.get("cid").toString());
+        long pageNum=Long.valueOf(map.get("pageNum").toString());
+        long pageSize=Long.valueOf(map.get("pageSize").toString());
+        List<StudentClass> studentClassList = studentClassService.showStuInClass(aid,cid,pageNum,pageSize);
+        List<Student> stuList=null;
+        for(int i=0;i<studentClassList.size();i++){
+            stuList.add(studentService.getStudentById(studentClassList.get(i).getSid()));
         }
-        List<Student> studentList=studentService.getStudentBySnoList(sidlist);
         Response response = new Response();
-        response = new Response(response.SUCCESS,"",studentList);
+        response = new Response(response.SUCCESS,"students",stuList);
         return response;
     }
 
     @RequestMapping(value = "/AddStuToClass",produces = "application/json;charset=utf-8",method= RequestMethod.POST)
     @ResponseBody
     public Response addStuToClass(@RequestBody List<StudentClass> studentClassList){
-        studentClassService.AddStuToClass(studentClassList);
+        studentClassService.addStuToClass(studentClassList);
         Response response = new Response();
         response = new Response(response.SUCCESS,"添加成功",null);
+        return response;
+    }
+    @RequestMapping(value = "/DeleteStuFromClass",produces = "application/json;charset=utf-8",method= RequestMethod.POST)
+    @ResponseBody
+    public Response deleteStuFromClass(@RequestBody Map<String,Object> map){
+        long sid=Long.valueOf(map.get("sid").toString());
+        long cid=Long.valueOf(map.get("cid").toString());
+        studentClassService.deleteStuFromClass(sid,cid);
+        Response response = new Response();
+        response = new Response(response.SUCCESS,"删除成功",null);
         return response;
     }
 
