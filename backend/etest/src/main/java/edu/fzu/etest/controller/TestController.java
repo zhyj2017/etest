@@ -117,9 +117,9 @@ public class TestController {
         return response;
     }
 
-    @RequestMapping(value = "/Stu/ShowPaper",produces = "application/json;charset=utf-8",method= RequestMethod.POST)
+    @RequestMapping(value = "/Stu/ShowTest",produces = "application/json;charset=utf-8",method= RequestMethod.POST)
     @ResponseBody
-    public Response showPaper(@RequestBody Map<String,Object> map){
+    public Response showPaper(@RequestBody Map<String,Object> map){   //学生查看未完成考试
         //获取学生sid
         long sid= Long.valueOf(map.get("sid").toString());
         int pageNum = Integer.valueOf(map.get("pageNum").toString());
@@ -134,9 +134,11 @@ public class TestController {
         return response;
     }
 
+
+
     @RequestMapping(value = "/Stu/ShowTestFin",produces = "application/json;charset=utf-8",method= RequestMethod.POST)
     @ResponseBody
-    public Response showTestFin(@RequestBody Map<String,Object> map){
+    public Response showTestFin(@RequestBody Map<String,Object> map){   //学生查看已经结束的考试
         //获取学生sid
         long sid= Long.valueOf(map.get("sid").toString());
         int pageNum = Integer.valueOf(map.get("pageNum").toString());
@@ -144,7 +146,7 @@ public class TestController {
         //获取学生班级cid
         long cid= studentClassService.showClassId(sid);
         //获取考试
-        List<Test> testList=testService.showPaper(cid,pageNum,pageSize);
+        List<Test> testList=testService.showTestFin(cid,pageNum,pageSize);
         for(int i=0;i<testList.size();i++){
             //先根据tid和sid查找grade表判断是否为空,查找为空插入成绩为0的数据
             if(gradeService.showGrade(sid,testList.get(i).getId())==null){
@@ -160,6 +162,37 @@ public class TestController {
         Map<String,Object> map1 = new HashMap<>();
         map1.put("tests",testList);
         Response response = new Response(200,"已经结束的考试",testList);
+        return response;
+    }
+    @RequestMapping(value = "/Stu/StartExam",produces = "application/json;charset=utf-8",method= RequestMethod.POST)
+    @ResponseBody
+    public Response startExam(@RequestBody Map<String,Object> map){ //学生开始考试
+        //获取考试tid
+        Long tid= Long.valueOf(map.get("tid").toString());
+        Test test=testService.startExam(tid);
+        List<PaperQuestion> paperQuestionList=paperQuestionService.getQuestionId(test.getPid());
+        List<Question> queList=null; //考取考题列表
+        for(int i=0;i<paperQuestionList.size();i++){
+            queList.add(questionService.getQuestionById(paperQuestionList.get(i).getQid()));
+        }
+        Map<String,Object> map1 = new HashMap<>();
+        map1.put("Questions",queList);
+        Response response = new Response(200,"",map1);
+        return response;
+    }
+    @RequestMapping(value = "/Stu/SubmitTest",produces = "application/json;charset=utf-8",method= RequestMethod.POST)
+    @ResponseBody
+    public Response submitTest(@RequestBody List<Answer> answerList){
+        double score = answerService.mark(answerList); //批改试卷
+        Grade grade = new Grade();
+        grade.setTid(answerList.get(0).getTid());
+        grade.setSid(answerList.get(0).getSid());
+        grade.setPid(answerList.get(0).getPid());
+        grade.setCid(studentClassService.showClassId(answerList.get(0).getSid()));
+        grade.setScore(score);
+        gradeService.add(grade);     //添加成绩
+        paperService.UpPaper(answerList);  //保存答案
+        Response response = new Response(200,"提交成功",null);
         return response;
     }
 //    @RequestMapping(value = "/Mark",produces = "application/json;charset=utf-8",method= RequestMethod.POST)

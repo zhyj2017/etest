@@ -2,8 +2,10 @@ package edu.fzu.etest.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import edu.fzu.etest.bean.Answer;
 import edu.fzu.etest.bean.Paper;
 import edu.fzu.etest.bean.Test;
+import edu.fzu.etest.mapper.AnswerMapper;
 import edu.fzu.etest.mapper.PaperMapper;
 import edu.fzu.etest.mapper.TestMapper;
 import edu.fzu.etest.service.PaperService;
@@ -18,6 +20,8 @@ public class PaperServiceImpl implements PaperService {
     PaperMapper paperMapper;
     @Autowired
     TestMapper testMapper;
+    @Autowired
+    AnswerMapper answerMapper;
 
     public void add(Paper paper){
         paperMapper.insert(paper);
@@ -43,5 +47,10 @@ public class PaperServiceImpl implements PaperService {
         }
         paperMapper.deleteById(pid);
         return true;
+    }
+    public void UpPaper(List<Answer> answerList){
+        for(int i=0;i<answerList.size();i++){
+            answerMapper.insert(answerList.get(i));
+        }
     }
 }

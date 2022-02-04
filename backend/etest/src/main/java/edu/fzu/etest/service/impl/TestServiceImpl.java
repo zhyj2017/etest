@@ -47,4 +47,8 @@ public class TestServiceImpl implements TestService {
         List<Test> testList=testMapper.selectPage(new Page<Test>(pageNum,pageSize),new QueryWrapper<Test>().eq("cid",id).ge("endtime",formatter.format(date))).getRecords();
         return testList;
     }
+    public Test startExam(long tid){
+        Test test=testMapper.selectOne(new QueryWrapper<Test>().eq("id",tid));
+        return test;
+    }
 }

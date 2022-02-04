@@ -13,5 +13,6 @@ public interface TestService {
     void delete(long tid);  //删除考试
     List<Test> showPaper(long id,int pageNum,int pageSize);  //查看未完成的考试
     List<Test> showTestFin(long id,int pageNum,int pageSize);  //查看以及完成的考试
+    Test startExam(long tid);  //根据tid查询Test
 
 }

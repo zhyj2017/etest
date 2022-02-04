@@ -16,5 +16,5 @@ public interface StudentService {
     List<Student> listStuInClass(long cid,long pageNum,long pageSize); //查找班级内的学生
     List<Student> listStudentNotInClass(long aid, int pageNum, int pageSize);  //查找未加入班级的学生
     List<Student> getStudentBySnoList(List<Long> sidList);//根据sno获取学生信息列表
-    void UpPaper(List<Answer> answerList);  //提交试卷
+
 }

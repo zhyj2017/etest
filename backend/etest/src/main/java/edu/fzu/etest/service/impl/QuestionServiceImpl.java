@@ -33,9 +33,9 @@ public class QuestionServiceImpl implements QuestionService {
         return questionMapper.selectPage(new Page<Question>(pageNum,pageSize),new QueryWrapper<Question>().eq("aid",aid).eq("type",type)).getRecords();
     }
 
-    public List<Question> getQuestionById(List<Long> qids){
-        List<Question>questionList= questionMapper.selectBatchIds(qids);
-        return questionList;
+    public Question getQuestionById(long qid){
+        Question question= questionMapper.selectOne(new QueryWrapper<Question>().eq("id",qid));
+        return question;
     }
 
     public void update(Question question){
