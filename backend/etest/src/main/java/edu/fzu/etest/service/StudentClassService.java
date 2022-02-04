@@ -8,8 +8,7 @@ import java.util.List;
 
 @Service
 public interface StudentClassService {
-    //id表示stuid
-    List<StudentClass> showStuInClass(long aid,long classid,long pageSize,long pageNum);
+
     //添加学生列表到班级
     void addStuToClass(List<StudentClass> studentClassList);
     //根据学生id查看班级id

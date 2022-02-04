@@ -58,6 +58,14 @@ public class StudentServiceImpl implements StudentService {
         studentMapper.deleteById(sid);
     }
 
+    public List<Student> listStuInClass(long cid,long pageNum,long pageSize){
+        return studentMapper.listStudentInClass(new Page<Student>(pageNum,pageSize),cid).getRecords();
+    }
+
+    public List<Student> listStudentNotInClass(long aid, int pageNum, int pageSize){
+        return studentMapper.listStudentNotInClass(new Page<Student>(pageNum,pageSize),aid).getRecords();
+    }
+
     public List<Student> getStudentBySnoList(List<Long> sidList){
         //根据学号集合获取学生对象
         List<Student> studentList=studentMapper.selectBatchIds(sidList);

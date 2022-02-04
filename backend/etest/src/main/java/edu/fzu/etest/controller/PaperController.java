@@ -117,7 +117,7 @@ public class PaperController {
         grade.setTid(answerList.get(0).getTid());
         grade.setSid(answerList.get(0).getSid());
         grade.setPid(answerList.get(0).getPid());
-        grade.setCid(studentClassService.ShowClassId(answerList.get(0).getSid()));
+        grade.setCid(studentClassService.showClassId(answerList.get(0).getSid()));
         grade.setScore(score);
         gradeService.add(grade);     //添加成绩
         studentService.UpPaper(answerList);  //保存答案

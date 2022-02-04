@@ -65,7 +65,7 @@ public class ClassesController {
         //student-class表删除
         studentClassService.deleteByCid(cid);
         Response response = new Response();
-        response = new Response(response.SUCCESS,"修改成功",null);
+        response = new Response(response.SUCCESS,"删除成功",null);
         return response;
     }
 }

@@ -21,26 +21,9 @@ public class StudentClassController {
     @Autowired
     StudentService studentService;
 
-    @RequestMapping(value = "/ShowStuInClass",produces = "application/json;charset=utf-8",method= RequestMethod.POST)
-    @ResponseBody
-    public Response showStuInClass(@RequestBody Map<String,Object> map){
-        long aid=Long.valueOf(map.get("aid").toString());
-        long cid=Long.valueOf(map.get("cid").toString());
-        long pageNum=Long.valueOf(map.get("pageNum").toString());
-        long pageSize=Long.valueOf(map.get("pageSize").toString());
-        List<StudentClass> studentClassList = studentClassService.showStuInClass(aid,cid,pageNum,pageSize);
-        List<Student> stuList=null;
-        for(int i=0;i<studentClassList.size();i++){
-            stuList.add(studentService.getStudentById(studentClassList.get(i).getSid()));
-        }
-        Response response = new Response();
-        response = new Response(response.SUCCESS,"students",stuList);
-        return response;
-    }
-
     @RequestMapping(value = "/AddStuToClass",produces = "application/json;charset=utf-8",method= RequestMethod.POST)
     @ResponseBody
-    public Response addStuToClass(@RequestBody List<StudentClass> studentClassList){
+    public Response addStuToClass(@RequestBody List<StudentClass> studentClassList){  //管理员添加学生进入班级
         studentClassService.addStuToClass(studentClassList);
         Response response = new Response();
         response = new Response(response.SUCCESS,"添加成功",null);
@@ -48,7 +31,7 @@ public class StudentClassController {
     }
     @RequestMapping(value = "/DeleteStuFromClass",produces = "application/json;charset=utf-8",method= RequestMethod.POST)
     @ResponseBody
-    public Response deleteStuFromClass(@RequestBody Map<String,Object> map){
+    public Response deleteStuFromClass(@RequestBody Map<String,Object> map){ //管理员 学生退出班级
         long sid=Long.valueOf(map.get("sid").toString());
         long cid=Long.valueOf(map.get("cid").toString());
         studentClassService.deleteStuFromClass(sid,cid);

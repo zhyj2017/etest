@@ -125,7 +125,7 @@ public class TestController {
         int pageNum = Integer.valueOf(map.get("pageNum").toString());
         int pageSize = Integer.valueOf(map.get("pageSize").toString());
         //获取学生班级cid
-        Long cid= studentClassService.ShowClassId(sid);
+        Long cid= studentClassService.showClassId(sid);
         //获取考试
         List<Test> testList=testService.showPaper(cid,pageNum,pageSize);
         Map<String,Object> map1 = new HashMap<>();
@@ -142,7 +142,7 @@ public class TestController {
         int pageNum = Integer.valueOf(map.get("pageNum").toString());
         int pageSize = Integer.valueOf(map.get("pageSize").toString());
         //获取学生班级cid
-        long cid= studentClassService.ShowClassId(sid);
+        long cid= studentClassService.showClassId(sid);
         //获取考试
         List<Test> testList=testService.showPaper(cid,pageNum,pageSize);
         for(int i=0;i<testList.size();i++){

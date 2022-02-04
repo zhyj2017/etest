@@ -18,7 +18,7 @@ public class StudentController {
     StudentClassService studentClassService;
 
 
-    @RequestMapping(value = "/ShowStudents",produces = "application/json;charset=utf-8",method= RequestMethod.POST)
+    @RequestMapping(value = "/ShowStudent",produces = "application/json;charset=utf-8",method= RequestMethod.POST)
     @ResponseBody
     public Response list(@RequestBody Map<String,Object> map){   //管理员查看学生信息
         int pageNum = Integer.valueOf(map.get("pageNum").toString());
@@ -56,6 +56,31 @@ public class StudentController {
         return response;
     }
 
+    @RequestMapping(value = "/ShowStuInClass",produces = "application/json;charset=utf-8",method= RequestMethod.POST)
+    @ResponseBody
+    public Response showStuInClass(@RequestBody Map<String,Object> map){  //管理员查看班级内的学生
+        long aid=Long.valueOf(map.get("aid").toString());
+        long cid=Long.valueOf(map.get("cid").toString());
+        long pageNum=Long.valueOf(map.get("pageNum").toString());
+        long pageSize=Long.valueOf(map.get("pageSize").toString());
+        List<Student> stuList = studentService.listStuInClass(cid,pageNum,pageSize);
+        Response response = new Response();
+        response = new Response(response.SUCCESS,"",stuList);
+        return response;
+    }
+
+    @RequestMapping(value = "/CheckStudent",produces = "application/json;charset=utf-8",method= RequestMethod.POST)
+    @ResponseBody
+    public Response checkStudent(@RequestBody Map<String,Object> map){   //管理员查看未加入班级可以分班的学生
+        long aid = Long.valueOf(map.get("aid").toString());
+        int pageNum = Integer.valueOf(map.get("pageNum").toString());
+        int pageSize = Integer.valueOf(map.get("pageSize").toString());
+        List<Student> studentList = studentService.listStudentNotInClass(aid,pageNum,pageSize);
+        Map<String,Object> map1 = new HashMap<>();
+        map1.put("students",studentList);
+        Response response = new Response(200,"",map1);
+        return response;
+    }
 
     @RequestMapping(value = "/Stu/ShowDetail",produces = "application/json;charset=utf-8",method= RequestMethod.POST)
     @ResponseBody

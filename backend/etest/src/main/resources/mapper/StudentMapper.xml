@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- 使用接口 代理的方式 namespace必须和接口的全路径名称一致 -->
+<mapper namespace="edu.fzu.etest.mapper.StudentMapper">
+
+    <select id="listStudentInClass" resultType="edu.fzu.etest.bean.Student">
+        SELECT *
+        FROM student as s, student_class as sc
+        WHERE s.id = sc.sid AND sc.cid = ${cid}
+    </select>
+
+    <select id="listStudentNotInClass" resultType="edu.fzu.etest.bean.Student">
+        SELECT * FROM student as s WHERE s.id NOT IN (
+          SELECT sc.sid FROM student_class as sc WHERE sc.cid in (
+            SELECT c.id FROM classes as c WHERE c.aid = ${aid}
+          )
+        )
+    </select>
+
+</mapper>
+

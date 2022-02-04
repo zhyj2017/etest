@@ -1,6 +1,7 @@
 package edu.fzu.etest.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import edu.fzu.etest.bean.*;
 import edu.fzu.etest.mapper.StudentClassMapper;
 import edu.fzu.etest.mapper.StudentMapper;
@@ -14,10 +15,8 @@ import java.util.List;
 public class StudentClassServiceImpl implements StudentClassService {
     @Autowired
     StudentClassMapper studentClassMapper;
-    //展示班级学生
-    public List<StudentClass> showStuInClass(long aid,long classid,long pageNum,long pageSize){
-        return studentClassMapper.selectList(new QueryWrapper<StudentClass>().eq("cid",classid));
-    }
+
+
 
     //添加学生列表到班级
     public void addStuToClass(List<StudentClass> studentClassList){
