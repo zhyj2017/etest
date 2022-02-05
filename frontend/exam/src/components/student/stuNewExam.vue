@@ -9,7 +9,7 @@
       <el-table-column fixed="left" prop="name" label="考试名称" width="240"></el-table-column>
       <el-table-column prop="start" label="考试开始时间" width="200"></el-table-column>
       <el-table-column prop="end" label="考试结束时间" width="200"></el-table-column>
-      <el-table-column prop="description" label="考试描述" width="490"></el-table-column>
+      <el-table-column prop="description" label="考试描述" width="550"></el-table-column>
       <el-table-column prop="author" label="发布人" width="150"></el-table-column>
       <el-table-column fixed="right" label="操作" width="150">
         <template slot-scope="scope">
@@ -51,13 +51,13 @@ export default {
     };
   },
   created() {
-    this.getAnswerInfo();
+    this.getPageInfo();
   },
   methods: {
     entryExam(examCode) { // 进入考试
       this.$router.push({path: '/stuTodoExam', query: {examCode: examCode}});
     },
-    getAnswerInfo() {
+    getPageInfo() {
       //分页查询所有试卷信息
       this.$axios(
         `/api/answers/${this.pagination.current}/${this.pagination.size}`
@@ -71,12 +71,12 @@ export default {
     //改变当前记录条数
     handleSizeChange(val) {
       this.pagination.size = val;
-      this.getAnswerInfo();
+      this.getPageInfo();
     },
     //改变当前页码，重新发送请求
     handleCurrentChange(val) {
       this.pagination.current = val;
-      this.getAnswerInfo();
+      this.getPageInfo();
     },
     tableRowClassName({ row, rowIndex }) {
       if (rowIndex % 2 == 0) {

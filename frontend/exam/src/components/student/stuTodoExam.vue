@@ -12,6 +12,8 @@
     <el-main>
       <div class="exam">
         <div v-for="(question, index) in questions">
+          <!-- 增加分数显示 -->
+          <!-- <div class="question">{{index+1}}、{{question.topic}} <el-tag>5分</el-tag></div> -->
           <div class="question">{{index+1}}、{{question.topic}}</div>
           <div v-if="question.type == 1"> <!-- 单选题 -->
             <!-- [WARNING]如果答案以数组的方式传递进入，以下可以改成for循环的形式 -->
@@ -47,7 +49,7 @@
       </div>
     </el-main>
     <el-footer>
-      <el-button type="primary" round :loading="buttonLoading" :disabled="buttonBan">交卷</el-button>
+      <el-button type="primary" round :loading="buttonLoading" :disabled="buttonBan" @click="submitExam()">交卷</el-button>
       <el-alert
         :title="buttonTipData"
         :type="buttonTipType"
@@ -124,10 +126,58 @@ export default {
     this.examCode = this.$route.query.examCode; // 获取路由传递的试卷id，用于查询并创建试卷
   },
   methods: {
+    // 进度条回调
     format(percentage) {
       return percentage === 100 ? '完成' : `${percentage.toFixed(0)}%`;
     },
-    selectedMessage:function (index) {
+    // 提交试卷
+    submitExam(){
+      this.buttonLoading = true;
+      // 提交试卷，在这里使用axios进行post请求
+      this.buttonLoading = false;
+      // 以下是message弹窗
+      const h = this.$createElement;
+      this.$msgbox({
+        title: '消息',
+        message: h('p', null, [
+          h('span', null, '试卷提交 '),
+          h('i', { style: 'color: teal' }, '成功'),
+          h('br', null, null),
+          h('span', null, '考试结束后，您可以在 '),
+          h('i', { style: 'color: #E6A23C' }, '已完成考试'),
+          h('span', null, ' 中查看您的答题成绩')
+        ]),
+        showCancelButton: false,
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        beforeClose: (action, instance, done) => {
+          /*
+          if (action === 'confirm') {
+            instance.confirmButtonLoading = false;
+            instance.confirmButtonText = '执行中...';
+            setTimeout(() => {
+              done();
+              setTimeout(() => {
+                instance.confirmButtonLoading = false;
+              }, 300);
+            }, 3000);
+          } else {
+            done();
+          }
+          */
+          done();
+          this.$router.push('/stuNewExam');
+        }
+      }).then(action => {
+        /*this.$message({
+          type: 'info',
+          message: 'action: ' + action
+        });*/
+
+      });
+    },
+    // 答题回调
+    selectedMessage(index) {
       var questionType = this.questions[index].type;
       if(questionType == 1){
         if(this.selectedInfo[index] == false) {

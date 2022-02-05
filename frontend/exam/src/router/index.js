@@ -25,12 +25,10 @@ export default new Router({
           path: '/stuTodoExam', // 学生端，进行考试
           component: () => import('@/components/student/stuTodoExam')
         },
-        /*
         {
           path: '/stuCompletedExam',  // 学生端，已完成考试
           component: () => import('@/components/student/stuCompletedExam')
         },
-        */
         {
           path: '/stuScoreDescription',   // 学生端，成绩功能功能介绍
           component: () => import('@/components/student/stuScoreDescription')
