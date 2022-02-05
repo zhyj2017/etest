@@ -14,5 +14,5 @@ import java.util.List;
 
 @Mapper
 public interface AnswerMapper extends BaseMapper<Answer> {
-    List<AnswerDTO> listAnswer(@Param("sid") long sid,@Param("tid") long tid);  //根据sid和tid查看试卷
+    List<AnswerDTO> listAnswer(@Param("tid") long tid);  //根据tid查看正确答案
 }

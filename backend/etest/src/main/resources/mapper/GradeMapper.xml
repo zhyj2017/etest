@@ -13,7 +13,7 @@
     </select>
 
     <select id="listBySid" resultType="edu.fzu.etest.dto.StuGradeDTO">
-        Select g.tid as tid,t.name as tname,g.score as score
+        Select g.tid as tid,t.tname as tname,g.score as score
         FROM grade as g,test as t
         WHERE g.tid = t.id AND g.sid= #{sid}
     </select>

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- 使用接口 代理的方式 namespace必须和接口的全路径名称一致 -->
+<mapper namespace="edu.fzu.etest.mapper.QuestionMapper">
+
+    <select id="listByPid" resultType="edu.fzu.etest.bean.Question">
+        SELECT * FROM paper_question as pq, question as q
+        WHERE q.id = pq.qid AND pq.pid = ${pid}
+    </select>
+
+
+</mapper>
+

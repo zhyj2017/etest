@@ -45,9 +45,25 @@ public class StudentServiceImpl implements StudentService {
         return students;
     }
 
+    public void add(Student student){
+        studentMapper.insert(student);
+    }
+
     public void update(Student student){
         //studentMapper.update(null, new UpdateWrapper<Student>().eq("id",student.getId()).set("sphone",student.getSphone()).set("password",student.getPassword()));
         studentMapper.updateById(student);
+    }
+
+    public void delete(long sid){
+        studentMapper.deleteById(sid);
+    }
+
+    public List<Student> listStuInClass(long cid,long pageNum,long pageSize){
+        return studentMapper.listStudentInClass(new Page<Student>(pageNum,pageSize),cid).getRecords();
+    }
+
+    public List<Student> listStudentNotInClass(long aid, int pageNum, int pageSize){
+        return studentMapper.listStudentNotInClass(new Page<Student>(pageNum,pageSize),aid).getRecords();
     }
 
     public List<Student> getStudentBySnoList(List<Long> sidList){
@@ -55,12 +71,5 @@ public class StudentServiceImpl implements StudentService {
         List<Student> studentList=studentMapper.selectBatchIds(sidList);
         return studentList;
     }
-
-    public void UpPaper(List<Answer> answerList){
-        for(int i=0;i<answerList.size();i++){
-            answerMapper.insert(answerList.get(i));
-        }
-    }
-
 
 }

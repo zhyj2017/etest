@@ -8,11 +8,11 @@ import java.util.List;
 
 @Service
 public interface StudentClassService {
-    //id表示stuid
-    List<StudentClass> ShowStuInClass(long classid);
-    //添加学生列表到班级
-    void AddStuToClass(List<StudentClass> studentClassList);
-    //根据学生id查看班级id
-    long ShowClassId(long sid);
+
+    void addStuToClass(List<StudentClass> studentClassList); //添加学生列表到班级
+    long showClassId(long sid);   //根据学生id查看班级id
+    void deleteByCid(long cid);   //根据cid删除班级学生表
+    void deleteBySid(long sid);   //根据sid删除学生
+    void deleteStuFromClass(long sid,long cid);  //将学生移出班级
 
 }
