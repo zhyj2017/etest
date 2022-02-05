@@ -33,10 +33,10 @@ public class QuestionServiceImpl implements QuestionService {
         return questionMapper.selectPage(new Page<Question>(pageNum,pageSize),new QueryWrapper<Question>().eq("aid",aid).eq("type",type)).getRecords();
     }
 
-    public Question getQuestionById(long qid){
-        Question question= questionMapper.selectOne(new QueryWrapper<Question>().eq("id",qid));
-        return question;
+    public List<Question> getQuestionsByPId(long pid){
+        return questionMapper.listByPid(pid);
     }
+
 
     public void update(Question question){
         questionMapper.updateById(question);

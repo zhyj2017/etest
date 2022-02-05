@@ -29,7 +29,7 @@ public class PaperController {
 
     @RequestMapping(value = "/AddQuesToPaper",produces = "application/json;charset=utf-8",method= RequestMethod.POST)
     @ResponseBody
-    public Response addQuesToPaper(@RequestBody List<PaperQuestion> paperQuestions){   //添加问题到考试里
+    public Response addQuesToPaper(@RequestBody List<PaperQuestion> paperQuestions){   //管理员添加问题到考试里
         for (int i=0;i<paperQuestions.size();i++){
             paperQuestionService.add(paperQuestions.get(i));
         }

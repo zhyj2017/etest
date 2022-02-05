@@ -32,7 +32,7 @@ public class StudentController {
 
     @RequestMapping(value = "/AddStudent",produces = "application/json;charset=utf-8",method= RequestMethod.POST)
     @ResponseBody
-    public Response addStudent(@RequestBody Student student){   //管理员修改学生信息
+    public Response addStudent(@RequestBody Student student){   //管理员添加学生信息
         studentService.add(student);
         Response response = new Response(200,"添加成功",null);
         return response;
@@ -48,7 +48,7 @@ public class StudentController {
 
     @RequestMapping(value = "/DeleteStudent",produces = "application/json;charset=utf-8",method= RequestMethod.POST)
     @ResponseBody
-    public Response deleteStudent(@RequestBody Map<String,Object> map){   //管理员修改学生信息
+    public Response deleteStudent(@RequestBody Map<String,Object> map){   //管理员删除学生信息
         long sid = Long.valueOf(map.get("sid").toString());
         studentService.delete(sid);
         studentClassService.deleteBySid(sid);

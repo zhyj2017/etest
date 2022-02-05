@@ -48,9 +48,5 @@ public class PaperServiceImpl implements PaperService {
         paperMapper.deleteById(pid);
         return true;
     }
-    public void UpPaper(List<Answer> answerList){
-        for(int i=0;i<answerList.size();i++){
-            answerMapper.insert(answerList.get(i));
-        }
-    }
+
 }

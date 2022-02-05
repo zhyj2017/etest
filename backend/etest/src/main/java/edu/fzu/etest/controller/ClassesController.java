@@ -19,7 +19,7 @@ public class ClassesController {
 
     @RequestMapping(value = "/AddClass",produces = "application/json;charset=utf-8",method= RequestMethod.POST)
     @ResponseBody
-    public Response addClass(@RequestBody Classes classes){
+    public Response addClass(@RequestBody Classes classes){       //管理员添加班级
         classesService.addClass(classes);
         Response response = new Response(200,"添加成功",null);
         return response;
@@ -37,7 +37,7 @@ public class ClassesController {
 
     @RequestMapping(value = "/CheckClass",produces = "application/json;charset=utf-8",method= RequestMethod.POST)
     @ResponseBody
-    public Response checkClass(@RequestBody Map<String,Object> map){
+    public Response checkClass(@RequestBody Map<String,Object> map){      //管理员查看班级
         long aid = Long.valueOf(map.get("aid").toString());
         long pageNum = Long.valueOf(map.get("pageNum").toString());
         long pageSize=Long.valueOf(map.get("pageSize").toString());
@@ -49,7 +49,7 @@ public class ClassesController {
 
     @RequestMapping(value = "/UpdateClass",produces = "application/json;charset=utf-8",method= RequestMethod.POST)
     @ResponseBody
-    public Response updateClass(@RequestBody Classes classes){
+    public Response updateClass(@RequestBody Classes classes){     //管理员修改班级
         classesService.updateClass(classes);
         Response response = new Response();
         response = new Response(response.SUCCESS,"修改成功",null);
@@ -58,7 +58,7 @@ public class ClassesController {
 
     @RequestMapping(value = "/DeleteClass",produces = "application/json;charset=utf-8",method= RequestMethod.POST)
     @ResponseBody
-    public Response deleteClass(@RequestBody Map<String,Object> map){
+    public Response deleteClass(@RequestBody Map<String,Object> map){  //管理员删除班级
         long cid = Long.valueOf(map.get("cid").toString());
         //classes表删除
         classesService.deleteClass(cid);

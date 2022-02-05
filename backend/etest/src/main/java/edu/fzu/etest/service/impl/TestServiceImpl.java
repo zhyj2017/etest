@@ -2,7 +2,10 @@ package edu.fzu.etest.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import edu.fzu.etest.bean.StudentClass;
 import edu.fzu.etest.bean.Test;
+import edu.fzu.etest.mapper.StudentClassMapper;
+import edu.fzu.etest.mapper.StudentMapper;
 import edu.fzu.etest.mapper.TestMapper;
 import edu.fzu.etest.service.TestService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +19,8 @@ import java.util.List;
 public class TestServiceImpl implements TestService {
     @Autowired
     TestMapper testMapper;
+    @Autowired
+    StudentClassMapper studentClassMapper;
 
     public void add(Test test){
         testMapper.insert(test);
@@ -33,22 +38,24 @@ public class TestServiceImpl implements TestService {
         testMapper.deleteById(qid);
     }
 
-    public List<Test> showPaper(long id,int pageNum,int pageSize){  //检查未完成的考试（时间还未到）
-        Date date=new Date();
-        SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
-        //(!!!不知道时间这部分这样语句实现行不行）
-        List<Test> testList=testMapper.selectPage(new Page<Test>(pageNum,pageSize),new QueryWrapper<Test>().eq("cid",id).ge("starttime",formatter.format(date))).getRecords();
-        return testList;
+    public List<Test> showTest(long sid, int pageNum, int pageSize){  //检查未完成的考试（时间还未到）
+        return testMapper.listTest(new Page<Test>(pageNum,pageSize),sid).getRecords();
     }
-    public List<Test> showTestFin(long id,int pageNum,int pageSize){
-        Date date=new Date();
-        SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
-        //(!!!不知道时间这部分这样语句实现行不行）
-        List<Test> testList=testMapper.selectPage(new Page<Test>(pageNum,pageSize),new QueryWrapper<Test>().eq("cid",id).ge("endtime",formatter.format(date))).getRecords();
-        return testList;
+
+    public List<Test> showTestFin(long sid, int pageNum,int pageSize){
+        return testMapper.listTestFin(new Page<Test>(pageNum,pageSize),sid).getRecords();
     }
-    public Test startExam(long tid){
+
+    public Test findByTid(long tid){
         Test test=testMapper.selectOne(new QueryWrapper<Test>().eq("id",tid));
         return test;
+    }
+
+    public List<Test> showOvertime(long sid){
+        Date date=new Date();
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        StudentClass studentClass = studentClassMapper.selectOne(new QueryWrapper<StudentClass>().eq("sid",sid));
+        List<Test> testList = testMapper.selectList(new QueryWrapper<Test>().eq("cid",studentClass.getCid()).lt("endtime",formatter.format(date)));
+        return testList;
     }
 }

@@ -28,6 +28,7 @@ public class GradeServiceImpl implements GradeService {
     public List<GradeDTO> listByCid(long cid, int pageNum, int pageSize){
         return gradeMapper.listByCid(new Page<>(pageNum,pageSize),cid).getRecords();
     }
+
     public List<StuGradeDTO> listBySid(long sid, int pageNum, int pageSize){
         return gradeMapper.listBySid(new Page<>(pageNum,pageSize),sid).getRecords();
     }
@@ -36,6 +37,7 @@ public class GradeServiceImpl implements GradeService {
         Grade grade=gradeMapper.selectOne(new QueryWrapper<Grade>().eq("sid",sid).eq("tid",tid));
         return grade.getPid();
     }
+
     public Grade showGrade(long sid,long tid){
         Grade grade=gradeMapper.selectOne(new QueryWrapper<Grade>().eq("sid",sid).eq("tid",tid));
         return grade;

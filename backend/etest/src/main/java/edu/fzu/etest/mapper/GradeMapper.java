@@ -12,5 +12,5 @@ import org.apache.ibatis.annotations.Param;
 @Mapper
 public interface GradeMapper extends BaseMapper<Grade> {
     IPage<GradeDTO> listByCid(Page<Grade> page, @Param("cid") long cid);  //根据cid查看考试成绩
-    IPage<StuGradeDTO> listBySid(Page<Grade> page, @Param("sid") long sid);  //学生根据sid查看成绩
+    IPage<StuGradeDTO> listBySid(Page<Grade> page, @Param("sid") long sid);  //根据sid查看成绩
 }

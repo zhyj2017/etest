@@ -11,5 +11,5 @@ public interface ClassesService {
     List<Classes> checkClass(long aid,long pageNum,long pageSize);  //分页展示班级
     void deleteClass(long cid);  //删除班级
     void updateClass(Classes classes);  //修改班级
-    List<Classes> list(long aid);
+    List<Classes> list(long aid);    //展示班级列表
 }

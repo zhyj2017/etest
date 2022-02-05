@@ -25,7 +25,7 @@ public class QuestionController {
 
     @RequestMapping(value = "/GetQuestions",produces = "application/json;charset=utf-8",method= RequestMethod.POST)
     @ResponseBody
-    public Response getQuestions(@RequestBody Map<String,Object> map){  //管理员查看问题
+    public Response getQuestions(@RequestBody Map<String,Object> map){  //管理员查看问题(不分页)
         long aid = Long.valueOf(map.get("aid").toString());
         int type = Integer.valueOf(map.get("type").toString());
         List<Question> questions = questionService.getQuestionsByType(aid,type);

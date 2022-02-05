@@ -36,9 +36,4 @@ public class AdminServiceImpl implements AdminService {
         adminMapper.insert(admin);
     }
 
-//    public List<Grade> showAnswer(Long cid, Long pid){
-//        List<Grade> gradeList=gradeMapper.selectList(new QueryWrapper<Grade>().eq("cid",cid).eq("pid",pid));
-//        return gradeList;
-//    }
-
 }

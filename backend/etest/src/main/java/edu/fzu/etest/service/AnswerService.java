@@ -9,5 +9,6 @@ import java.util.List;
 @Service
 public interface AnswerService {
     double mark(List<Answer> answers);  //改卷
-    List<AnswerDTO> listAnswer(long sid,long tid);
+    List<AnswerDTO> listAnswer(long sid,long tid);  //列出答案
+    void saveAnswer(List<Answer> answerList);  //保存答案
 }

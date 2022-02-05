@@ -63,7 +63,7 @@ public class TestController {
 
     @RequestMapping(value = "/ShowTest",produces = "application/json;charset=utf-8",method= RequestMethod.POST)
     @ResponseBody
-    public Response showTest(@RequestBody Map<String,Object> map){  //管理员查看考试
+    public Response showTests(@RequestBody Map<String,Object> map){  //管理员查看考试
         long aid = Long.valueOf(map.get("aid").toString());
         int pageNum = Integer.valueOf(map.get("pageNum").toString());
         int pageSize = Integer.valueOf(map.get("pageSize").toString());
@@ -119,18 +119,30 @@ public class TestController {
 
     @RequestMapping(value = "/Stu/ShowTest",produces = "application/json;charset=utf-8",method= RequestMethod.POST)
     @ResponseBody
-    public Response showPaper(@RequestBody Map<String,Object> map){   //学生查看未完成考试
+    public Response showTest(@RequestBody Map<String,Object> map){   //学生查看未完成考试
         //获取学生sid
         long sid= Long.valueOf(map.get("sid").toString());
         int pageNum = Integer.valueOf(map.get("pageNum").toString());
         int pageSize = Integer.valueOf(map.get("pageSize").toString());
-        //获取学生班级cid
-        Long cid= studentClassService.showClassId(sid);
-        //获取考试
-        List<Test> testList=testService.showPaper(cid,pageNum,pageSize);
+        //获取已经超时的考试
+        List<Test> testList=testService.showOvertime(sid);
+        for (int i=0;i<testList.size();i++){
+            Grade grade = null;
+            grade = gradeService.showGrade(sid,testList.get(i).getId());
+            if (grade == null){     //如果学生没有参加该考试，成绩为0
+                grade = new Grade();
+                grade.setTid(testList.get(i).getId());
+                grade.setPid(testList.get(i).getPid());
+                grade.setSid(sid);
+                grade.setCid(testList.get(i).getCid());
+                grade.setScore(0);
+                gradeService.add(grade);
+            }
+        }
+        List<Test> tests = testService.showTest(sid,pageNum,pageSize);
         Map<String,Object> map1 = new HashMap<>();
-        map1.put("tests",testList);
-        Response response = new Response(200,"未开始的考试",testList);
+        map1.put("tests",tests);
+        Response response = new Response(200,"未开始的考试",map1);
         return response;
     }
 
@@ -143,25 +155,25 @@ public class TestController {
         long sid= Long.valueOf(map.get("sid").toString());
         int pageNum = Integer.valueOf(map.get("pageNum").toString());
         int pageSize = Integer.valueOf(map.get("pageSize").toString());
-        //获取学生班级cid
-        long cid= studentClassService.showClassId(sid);
-        //获取考试
-        List<Test> testList=testService.showTestFin(cid,pageNum,pageSize);
-        for(int i=0;i<testList.size();i++){
-            //先根据tid和sid查找grade表判断是否为空,查找为空插入成绩为0的数据
-            if(gradeService.showGrade(sid,testList.get(i).getId())==null){
-                Grade grade=new Grade();
-                grade.setCid(cid);
-                grade.setSid(sid);
-                grade.setScore(0);
-                grade.setPid(testList.get(i).getPid());
+        //获取已经超时的考试
+        List<Test> testList=testService.showOvertime(sid);
+        for (int i=0;i<testList.size();i++){
+            Grade grade = null;
+            grade = gradeService.showGrade(sid,testList.get(i).getId());
+            if (grade == null){     //如果学生没有参加该考试，成绩为0
+                grade = new Grade();
                 grade.setTid(testList.get(i).getId());
+                grade.setPid(testList.get(i).getPid());
+                grade.setSid(sid);
+                grade.setCid(testList.get(i).getCid());
+                grade.setScore(0);
                 gradeService.add(grade);
             }
         }
+        List<Test> tests = testService.showTestFin(sid,pageNum,pageSize);
         Map<String,Object> map1 = new HashMap<>();
-        map1.put("tests",testList);
-        Response response = new Response(200,"已经结束的考试",testList);
+        map1.put("tests",tests);
+        Response response = new Response(200,"已经结束的考试",map1);
         return response;
     }
     @RequestMapping(value = "/Stu/StartExam",produces = "application/json;charset=utf-8",method= RequestMethod.POST)
@@ -169,20 +181,16 @@ public class TestController {
     public Response startExam(@RequestBody Map<String,Object> map){ //学生开始考试
         //获取考试tid
         Long tid= Long.valueOf(map.get("tid").toString());
-        Test test=testService.startExam(tid);
-        List<PaperQuestion> paperQuestionList=paperQuestionService.getQuestionId(test.getPid());
-        List<Question> queList=null; //考取考题列表
-        for(int i=0;i<paperQuestionList.size();i++){
-            queList.add(questionService.getQuestionById(paperQuestionList.get(i).getQid()));
-        }
+        Test test = testService.findByTid(tid);
+        List<Question> questions = questionService.getQuestionsByPId(test.getPid());
         Map<String,Object> map1 = new HashMap<>();
-        map1.put("Questions",queList);
+        map1.put("questions",questions);
         Response response = new Response(200,"",map1);
         return response;
     }
     @RequestMapping(value = "/Stu/SubmitTest",produces = "application/json;charset=utf-8",method= RequestMethod.POST)
     @ResponseBody
-    public Response submitTest(@RequestBody List<Answer> answerList){
+    public Response submitTest(@RequestBody List<Answer> answerList){   //学生交卷
         double score = answerService.mark(answerList); //批改试卷
         Grade grade = new Grade();
         grade.setTid(answerList.get(0).getTid());
@@ -191,22 +199,10 @@ public class TestController {
         grade.setCid(studentClassService.showClassId(answerList.get(0).getSid()));
         grade.setScore(score);
         gradeService.add(grade);     //添加成绩
-        paperService.UpPaper(answerList);  //保存答案
+        answerService.saveAnswer(answerList);  //保存答案
         Response response = new Response(200,"提交成功",null);
         return response;
     }
-//    @RequestMapping(value = "/Mark",produces = "application/json;charset=utf-8",method= RequestMethod.POST)
-//    @ResponseBody
-//    public Response Mark(@RequestBody Map<String,Object> map){
-//        List<Answer> list1 = (List<Answer>)map.get("list");
-//        ObjectMapper mapper = new ObjectMapper();
-//        List<Answer> list = mapper.convertValue(list1, new TypeReference<List<Answer>>() {});
-//        double score = answerService.mark(list);
-//        Map<String,Object> map1 = new HashMap<>();
-//        map1.put("score",score);
-//        Response response = new Response(200,"",map1);
-//        return response;
-//    }
 
 
 }

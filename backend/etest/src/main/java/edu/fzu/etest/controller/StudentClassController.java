@@ -31,7 +31,7 @@ public class StudentClassController {
     }
     @RequestMapping(value = "/DeleteStuFromClass",produces = "application/json;charset=utf-8",method= RequestMethod.POST)
     @ResponseBody
-    public Response deleteStuFromClass(@RequestBody Map<String,Object> map){ //管理员 学生退出班级
+    public Response deleteStuFromClass(@RequestBody Map<String,Object> map){ //管理员将学生移出班级
         long sid=Long.valueOf(map.get("sid").toString());
         long cid=Long.valueOf(map.get("cid").toString());
         studentClassService.deleteStuFromClass(sid,cid);

@@ -16,9 +16,6 @@ public class StudentClassServiceImpl implements StudentClassService {
     @Autowired
     StudentClassMapper studentClassMapper;
 
-
-
-    //添加学生列表到班级
     public void addStuToClass(List<StudentClass> studentClassList){
         for(int i=0;i<studentClassList.size();i++){
             studentClassMapper.insert(studentClassList.get(i));
@@ -26,7 +23,7 @@ public class StudentClassServiceImpl implements StudentClassService {
     }
 
     public long showClassId(long sid){
-        StudentClass studentClass=studentClassMapper.selectById(new QueryWrapper<StudentClass>().eq("sid",sid));
+        StudentClass studentClass=studentClassMapper.selectOne(new QueryWrapper<StudentClass>().eq("sid",sid));
         return studentClass.getCid();
     }
     public void deleteByCid(long cid){
