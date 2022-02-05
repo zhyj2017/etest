@@ -27,10 +27,21 @@ export default {
         this.active = this.menu[data-1]
         // console.log(JSON.stringify(this.active)+'----')
       })
+    },
+    // [WARNING]此处使用额外定义的getNameByStr函数解决学生端顶部标题错误的问题
+    // 但这样，一定程度上增加了耦合度，应当考虑根据角色修改menu内容，使用同一个函数完成顶部标题更改
+    // 此外，当刷新页面时，由于没有index传入，所以顶部标题为空白，这是一个小瑕疵
+    getNameByStr() {
+      this.bus.$on('sendNameByStr',(data, name)=>{
+        if(data >= 0)
+          this.index1 = data;
+        this.active = name;
+      })
     }
   },
   created() {
-    this.getIndex()
+      this.getIndex(),
+      this.getNameByStr()
   },
   beforeDestroy() {
     // this.bus.$off('sendIndex') //销毁

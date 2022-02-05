@@ -7,7 +7,8 @@ const state = {
   isPractice: false, //练习模式标志
   flag: false, //菜单栏左右滑动标志
   userInfo: null,
-  menu: [{
+  menu: [
+    {
       index: '1',
       title: '考试管理',
       icon: 'icon-kechengbiao',
@@ -38,6 +39,20 @@ const state = {
       content:[{item1:'学生管理',path:'/studentManage'},{item2: '添加学生',path: '/addStudent'},{item3: '班级管理',path: '/classManage'},{item4: '创建班级',path: '/addClass'}],
     },
   ],
+  stuMenu: [
+    {
+      index: '1',
+      title: '考试信息',
+      icon: 'icon-kechengbiao',
+      content:[{item:'功能介绍',path:'/stuExamDescription'},{item:'待参加考试',path:'/stuNewExam'},{item:'已完成考试',path:'/stuCompletedExam'}],
+    },
+    {
+      index: '2',
+      title: '成绩管理',
+      icon: 'icon-performance',
+      content:[{item:'功能介绍',path:'/stuScoreDescription'},{item:'成绩查询',path:'/stuScoreCheck'},{item:'成绩排名',path:'/stuScoreRank'}],
+    }
+  ]
 }
 const mutations = {
   practice(state,status) {

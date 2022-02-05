@@ -10,6 +10,44 @@ export default new Router({
       component: () => import('@/components/admin/index')
     },
     {
+      path: '/student',//学生主页
+      component: () => import('@/components/student/index'),
+      children: [
+        {
+          path: '/stuExamDescription', // 学生端，考试信息功能介绍
+          component: () => import('@/components/student/stuExamDescription')
+        },
+        {
+          path: '/stuNewExam', // 学生端，待完成考试
+          component: () => import('@/components/student/stuNewExam')
+        },
+        {
+          path: '/stuTodoExam', // 学生端，进行考试
+          component: () => import('@/components/student/stuTodoExam')
+        },
+        /*
+        {
+          path: '/stuCompletedExam',  // 学生端，已完成考试
+          component: () => import('@/components/student/stuCompletedExam')
+        },
+        */
+        {
+          path: '/stuScoreDescription',   // 学生端，成绩功能功能介绍
+          component: () => import('@/components/student/stuScoreDescription')
+        },
+        /*
+        {
+          path: '/stuScoreCheck', // 学生端，成绩查看
+          component: () => import('@/components/student/stuScoreCheck')
+        },
+        {
+          path: '/stuScoreRank',  // 学生端，成绩排名
+          component: ()=> import('@/components/student/stuScoreRank')
+        }
+         */
+      ]
+    },
+    {
       path: '/index', //教师主页
       component: () => import('@/components/admin/index'),
       children: [

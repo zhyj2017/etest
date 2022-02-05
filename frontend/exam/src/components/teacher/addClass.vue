@@ -9,9 +9,6 @@
       <el-form-item label="班级名称">
         <el-input v-model="form.className"></el-input>
       </el-form-item>
-      <el-form-item label="创建者">
-        <el-input v-model="form.creator"></el-input>
-      </el-form-item>
       <el-form-item>
         <el-button type="primary" @click="onSubmit()">立即创建</el-button>
         <el-button type="text" @click="cancel()">取消</el-button>
