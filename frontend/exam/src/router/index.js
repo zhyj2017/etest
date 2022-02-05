@@ -33,7 +33,6 @@ export default new Router({
           path: '/stuScoreDescription',   // 学生端，成绩功能功能介绍
           component: () => import('@/components/student/stuScoreDescription')
         },
-        /*
         {
           path: '/stuScoreCheck', // 学生端，成绩查看
           component: () => import('@/components/student/stuScoreCheck')
@@ -42,7 +41,6 @@ export default new Router({
           path: '/stuScoreRank',  // 学生端，成绩排名
           component: ()=> import('@/components/student/stuScoreRank')
         }
-         */
       ]
     },
     {

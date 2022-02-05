@@ -2,9 +2,22 @@
 描述：查看所有成绩
 作者：211027134 叶怀生
 时间：2022年1月30日15:50:32
+修改：2022年2月6日05:25:49
 -->
 <template>
   <div class="all">
+    <el-select v-model="classValue" filterable placeholder="请选择班级后进行查询">
+      <el-option
+        v-for="item in classList"
+        :key="item.value"
+        :label="item.label"
+        :value="item.value">
+      </el-option>
+    </el-select>
+    <el-tooltip class="item" effect="dark" content="查询指定班级的成绩" placement="top">
+      <el-button icon="el-icon-search" circle style="margin-left: 4px;"></el-button>
+    </el-tooltip>
+    <div style="margin-bottom: 14px"></div>
     <el-table :data="pagination.records" border>
       <el-table-column fixed="left" prop="testName" label="试卷名称" width="300"></el-table-column>
       <el-table-column prop="studentNo" label="学生学号" width="200"></el-table-column>
@@ -35,6 +48,20 @@ export default {
         size: 6, //每页条数
       },
       form: {}, //保存点击以后当前考生的信息
+      classList: [{
+        value: '1',
+        label: '2021级电子信息1班'
+      },{
+        value: '2',
+        label: '2021级电子信息2班'
+      }, {
+        value: '3',
+        label: '2021级电子信息3班'
+      },{
+        value: '4',
+        label: '2021级电子信息4班'
+      }],
+      classValue: '',
     };
   },
   created() {
