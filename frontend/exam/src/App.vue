@@ -1,3 +1,10 @@
+<!--
+描述：vue主件
+作者：211027137 林羽希
+完善：211027134 叶怀生
+创建：unkown
+修改：2022年2月9日18:39:27
+-->
 <template>
   <div id="app">
     <router-view/>
@@ -11,6 +18,10 @@ export default {
 </script>
 
 <style>
+body{
+  background-color: #2b3248;
+  /* 如果这边不增加背景色的话，在某些视图区较大的浏览器当中，底部会出现白边 */
+}
 ul {
   list-style: none;
 }

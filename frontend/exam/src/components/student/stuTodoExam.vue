@@ -2,7 +2,7 @@
 描述：学生端，考试页面
 作者：211027134 叶怀生
 创建：2022年2月5日15:47:55
-修改：2022年2月6日05:27:18
+修改：2022年2月9日16:58:58
 -->
 <template>
   <el-container class="conatiner">
@@ -15,7 +15,7 @@
         <div v-for="(question, index) in questions">
           <!-- 增加分数显示 -->
           <!-- <div class="question">{{index+1}}、{{question.topic}} <el-tag>5分</el-tag></div> -->
-          <div class="question">{{index+1}}、{{question.topic}}</div>
+          <div class="question">{{index+1}}、{{question.title}}</div>
           <div v-if="question.type == 1"> <!-- 单选题 -->
             <!-- [WARNING]如果答案以数组的方式传递进入，以下可以改成for循环的形式 -->
             <div>
@@ -67,115 +67,155 @@ export default {
   name: "stuTodoExam",
   data() {
     return{
-      questions: [{
-        topic: '这是一个测试题目',
-        optionA: '2022年2月5日15:03:40',
-        optionB: '2022年2月5日15:03:48',
-        optionC: '考试列表测试罢了',
-        optionD: '老小子',
-        questionCode: 123,
-        type: 2,  // 多选题
-        A_selected: false,
-        B_selected: false,
-        C_selected: false,
-        D_selected: false,
-        selected:'-1'
-      },
-      {
-        topic: '这是两个测试题目',
-        optionA: '2022年2月5日15:03:40',
-        optionB: '2022年2月5日15:03:48',
-        optionC: '考试列表测试罢了',
-        optionD: '老小子',
-        questionCode: 123,
-        type: 1,  // 单选题
-        A_selected: false,
-        B_selected: false,
-        C_selected: false,
-        D_selected: false,
-        selected:'-1'
-      },
-      {
-        topic: '这是两个测试题目',
-        optionA: '2022年2月5日15:03:40',
-        optionB: '2022年2月5日15:03:48',
-        optionC: '考试列表测试罢了',
-        optionD: '老小子',
-        questionCode: 123,
-        type: 1,  // 单选题
-        A_selected: false,
-        B_selected: false,
-        C_selected: false,
-        D_selected: false,
-        selected:'-1'
-      }],
+      questions: [],
       buttonLoading: false, // 按钮是否显示未提交状态
       buttonBan: true,    // 按钮是否显示未禁止状态
       totalQuestionNum: 1,
       selectedNum: 0, // 已完成题目数量
       selectedInfo:[],
       buttonTipData:'您当前存在未完成题目，暂时无法交卷。',
-      buttonTipType:'warning'
+      buttonTipType:'warning',
+      webSite: 'http://8.130.16.20:8080/' // 站点地址
     }
   },
   created() {
-
-    this.totalQuestionNum = this.questions.length;  // 获取题目数量
-    for(var index = 0; index < this.totalQuestionNum; index++){
-      this.selectedInfo.push(false)
-    }
-    this.examCode = this.$route.query.examCode; // 获取路由传递的试卷id，用于查询并创建试卷
+    this.tid = this.$route.query.tid; // 获取路由传递的试卷id，用于查询并创建试卷
+    this.pid = this.$route.query.pid;
+    this.sid = this.$route.query.sid;
+    this.totalQuestionNum = 1;
+    this.getQuestionList();
   },
   methods: {
     // 进度条回调
     format(percentage) {
       return percentage === 100 ? '完成' : `${percentage.toFixed(0)}%`;
     },
+    // 获取考试信息列表
+    getQuestionList(){
+      if(this.tid >= 0){
+        this.$axios({
+          url: this.webSite + 'Stu/StartExam',
+          method: 'post',
+          data: {tid: this.tid}
+        }).then(res => {
+          if(res.data.code == '200'){
+            this.questions = res.data.data.questions;
+            console.log('num', this.questions.length);
+            this.totalQuestionNum = Math.max(this.questions.length, 1);  // 获取题目数量
+            for(let index = 0; index < this.totalQuestionNum; index++){
+              this.selectedInfo.push(false);
+              console.log(this.questions[index]);
+            }
+          }
+          else{
+            this.$message({
+              message: '拉取考试信息失败，' + res.data,
+              type: 'warning'
+            })
+          }
+        })
+          .catch(error => {});
+      }
+    },
     // 提交试卷
     submitExam(){
       this.buttonLoading = true;
       // 提交试卷，在这里使用axios进行post请求
-      this.buttonLoading = false;
-      // 以下是message弹窗
-      const h = this.$createElement;
-      this.$msgbox({
-        title: '消息',
-        message: h('p', null, [
-          h('span', null, '试卷提交 '),
-          h('i', { style: 'color: teal' }, '成功'),
-          h('br', null, null),
-          h('span', null, '考试结束后，您可以在 '),
-          h('i', { style: 'color: #E6A23C' }, '已完成考试'),
-          h('span', null, ' 中查看您的答题成绩')
-        ]),
-        showCancelButton: false,
-        confirmButtonText: '确定',
-        cancelButtonText: '取消',
-        beforeClose: (action, instance, done) => {
-          /*
-          if (action === 'confirm') {
-            instance.confirmButtonLoading = false;
-            instance.confirmButtonText = '执行中...';
-            setTimeout(() => {
-              done();
-              setTimeout(() => {
-                instance.confirmButtonLoading = false;
-              }, 300);
-            }, 3000);
-          } else {
-            done();
-          }
-          */
-          done();
-          this.$router.push('/stuNewExam');
+      let submitData = [];
+      for(let j = 0, len = this.questions.length; j < len; j++){
+        // 生成答案数据
+        let answer = '';
+        let ABCD = ['A', 'B', 'C', 'D'];
+        if(this.questions[j].type == 1){
+          answer = ABCD[this.questions[j].selected - 1];
+        }else{
+          if(this.questions[j].A_selected)
+            answer += 'A';
+          if(this.questions[j].B_selected)
+            answer += 'B';
+          if(this.questions[j].C_selected)
+            answer += 'C';
+          if(this.questions[j].D_selected)
+            answer += 'D';
         }
-      }).then(action => {
-        /*this.$message({
-          type: 'info',
-          message: 'action: ' + action
-        });*/
+        submitData.push({
+          tid: this.tid,
+          pid: this.pid,
+          qid: this.questions[j].id,
+          sid: this.sid,
+          answer: answer
+        });
+      }
+      let success = false;
+      let infoData = '';
+      this.$axios({
+        url: this.webSite + 'Stu/SubmitTest',
+        method: 'post',
+        data: submitData
+      }).then(res => {
+        if(res.data.code == '200'){
+          success = true;
+        }
+        else{
+          infoData = res.data;
+        }
+        // 以下是message弹窗与路由跳转
+        const h = this.$createElement;
+        let msgInfo = null;
+        if(success == true){
+          msgInfo = h('p', null, [
+            h('span', null, '试卷提交 '),
+            h('i', { style: 'color: teal' }, '成功'),
+            h('br', null, null),
+            h('span', null, '考试结束后，您可以在 '),
+            h('i', { style: 'color: #E6A23C' }, '已完成考试'),
+            h('span', null, ' 中查看您的答题成绩')
+          ]);
 
-      });
+        }else{
+          msgInfo = h('p', null, [
+            h('span', null, '试卷提交 '),
+            h('i', { style: 'color: red' }, '失败'),
+            h('br', null, null),
+            h('span', null, infoData),
+          ]);
+        }
+
+        // [WAIT FIX] 这里的提示有点问题，一直提示失败，即使提交成功。
+        this.$msgbox({
+          title: '消息',
+          message: msgInfo,
+          showCancelButton: false,
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          beforeClose: (action, instance, done) => {
+            /*
+            if (action === 'confirm') {
+              instance.confirmButtonLoading = false;
+              instance.confirmButtonText = '执行中...';
+              setTimeout(() => {
+                done();
+                setTimeout(() => {
+                  instance.confirmButtonLoading = false;
+                }, 300);
+              }, 3000);
+            } else {
+              done();
+            }
+            */
+            done();
+            if(success)
+              this.$router.push('/stuNewExam');
+          }
+        }).then(action => {
+          /*this.$message({
+            type: 'info',
+            message: 'action: ' + action
+          });*/
+
+        });
+      })
+      this.buttonLoading = false;
     },
     // 答题回调
     selectedMessage(index) {

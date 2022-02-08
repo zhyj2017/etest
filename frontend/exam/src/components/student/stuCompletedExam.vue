@@ -2,7 +2,7 @@
 描述：学生端，查看已完成考试的成绩以及答案详情。
 作者：211027134 叶怀生
 创建：2022年2月5日20:15:05
-修改：2022年2月6日05:26:24
+修改：2022年2月9日16:58:51
 -->
 <template>
   <div class="exam">
@@ -16,14 +16,17 @@
     </el-select>
     <div style="margin-bottom: 14px"></div>
     <el-table :data="pagination.records" border :row-class-name="tableRowClassName">
-      <el-table-column fixed="left" prop="name" label="考试名称" width="240"></el-table-column>
-      <el-table-column prop="end" label="考试结束时间" width="200"></el-table-column>
+      <el-table-column fixed="left" prop="tname" label="考试名称" width="240"></el-table-column>
+      <el-table-column prop="starttime" label="考试开始时间" width="200"></el-table-column>
+      <el-table-column prop="endtime" label="考试结束时间" width="200"></el-table-column>
       <el-table-column prop="description" label="考试描述" width="640"></el-table-column>
+      <!--
       <el-table-column prop="author" label="发布人" width="150"></el-table-column>
-      <el-table-column prop="score" label="得分" width="100"></el-table-column>
+      -->
+      <el-table-column prop="score" label="" width="100"></el-table-column>
       <el-table-column fixed="right" label="操作" width="150">
         <template slot-scope="scope">
-          <el-button @click="entryExam(scope.row.name, scope.row.examCode)" type="primary" size="small">查看试卷</el-button>
+          <el-button @click="entryExam(scope.row.tname, scope.row.id)" type="primary" size="small" icon="el-icon-more-outline">查看试卷</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -39,9 +42,9 @@
     ></el-pagination>
     <el-dialog :title="nowExamTitle" :visible.sync="dialogTableVisible">
       <el-descriptions title="" direction="vertical" :column="4" border>
-        <el-descriptions-item label="答题人"><el-tag size="small">叶怀生</el-tag></el-descriptions-item>
-        <el-descriptions-item label="总分100分"><el-tag size="small">100分</el-tag></el-descriptions-item>
-        <el-descriptions-item label="共20题" :span="2"><el-tag size="small">答对7题</el-tag></el-descriptions-item>
+        <el-descriptions-item label="答题人"><el-tag size="small">{{sname}}</el-tag></el-descriptions-item>
+        <el-descriptions-item :label=totalScore><el-tag size="small">{{score}}分</el-tag></el-descriptions-item>
+        <el-descriptions-item :label=totalNum :span="2"><el-tag size="small">答对{{successNum}}题</el-tag></el-descriptions-item>
       </el-descriptions>
       <div style="width: 100%; height: 64px;">
         <div class="el-icon-s-order" style="font-size: 16px; font-weight: bold;margin-top: 32px"> 答题解析</div>
@@ -57,7 +60,7 @@
       <div>
         <div v-for="(question, index) in questions">
           <div v-if="switchState==false || question.success==false">
-            <div class="question">{{index+1}}、{{question.topic}} <el-tag type="info">分值5分</el-tag></div>
+            <div class="question">{{index+1}}、{{question.title}} <el-tag type="info">分值5分</el-tag></div>
             <div v-if="question.type == 1"> <!-- 单选题 -->
               <!-- [WARNING]如果答案以数组的方式传递进入，以下可以改成for循环的形式 -->
               <div>
@@ -122,67 +125,13 @@ export default {
   data() {
     return {
       pagination: {
-        records: [{
-          name: '测试数据',
-          end: '2022年2月5日15:03:48',
-          description: '考试列表测试罢了',
-          author: '老小子',
-          score: 100,
-          examCode: 123
-        }],
+        records: [],
         //分页后的考试信息
         current: 1, //当前页
         total: null, //记录条数
         size: 6 //每页条数
       },
-      questions: [{
-        topic: '这是一个测试题目',
-        optionA: '2022年2月5日15:03:40',
-        optionB: '2022年2月5日15:03:48',
-        optionC: '考试列表测试罢了',
-        optionD: '老小子',
-        questionCode: 123,
-        type: 2,  // 多选题
-        A_selected: true,
-        B_selected: false,
-        C_selected: true,
-        D_selected: false,
-        selected:'-1',
-        success: false,
-        tip: '正确答案：A，因为A就是对的啊！'
-      },
-      {
-        topic: '这是两个测试题目',
-        optionA: '2022年2月5日15:03:40',
-        optionB: '2022年2月5日15:03:48',
-        optionC: '考试列表测试罢了',
-        optionD: '老小子',
-        questionCode: 123,
-        type: 1,  // 单选题
-        A_selected: false,
-        B_selected: false,
-        C_selected: false,
-        D_selected: false,
-        selected:'1',
-        success: true,
-        tip: '正确答案：A，因为A就是对的啊！'
-      },
-      {
-        topic: '这是两个测试题目',
-        optionA: '2022年2月5日15:03:40',
-        optionB: '2022年2月5日15:03:48',
-        optionC: '考试列表测试罢了',
-        optionD: '老小子',
-        questionCode: 123,
-        type: 1,  // 单选题
-        A_selected: false,
-        B_selected: false,
-        C_selected: false,
-        D_selected: false,
-        selected:'2',
-        success: false,
-        tip: '正确答案：A，因为A就是对的啊！'
-      }],
+      questions: [],
       terms: [{
         value: '1',
         label: '全部考试'
@@ -191,58 +140,108 @@ export default {
         label: '2021-2022-2'
       }],
       termValue: '1',
-      gridData: [{
-        date: '2016-05-02',
-        name: '王小虎',
-        address: '上海市普陀区金沙江路 1518 弄'
-      }, {
-        date: '2016-05-04',
-        name: '王小虎',
-        address: '上海市普陀区金沙江路 1518 弄'
-      }, {
-        date: '2016-05-01',
-        name: '王小虎',
-        address: '上海市普陀区金沙江路 1518 弄'
-      }, {
-        date: '2016-05-03',
-        name: '王小虎',
-        address: '上海市普陀区金沙江路 1518 弄'
-      }],
       dialogTableVisible: false,
       nowExamTitle: '',
-      nowExamCode: -1,
-      switchState: false
+      switchState: false,
+      sname: '叶怀生', // [WARNING] 注意从cookie中获取
+      totalScore: 0,
+      score: 100,
+      totalNum: 0,
+      successNum: 0,
+      webSite: 'http://8.130.16.20:8080/' // 站点地址
     };
   },
   created() {
-    this.getPageInfo();
+    this.getExamInfo();
   },
   methods: {
-    entryExam(name, examCode) { // 查看试卷
+    entryExam(name, testId) { // 查看试卷
+      let submitData = {
+        sid: 5, // [WARNING] 注意从cookie中获取
+        tid: testId
+      };
+      this.$axios({
+        url: this.webSite + 'Stu/ShowAnswer',
+        method: 'post',
+        data: submitData
+      }).then(res => {
+        if(res.data.code == '200'){
+          this.questions = res.data.data.answers;
+          this.totalNum = '共'+this.questions.length+'题';
+          this.totalScore = '总分'+(this.questions.length * 5)+'分';
+          this.score = 0;
+          this.successNum = 0;
+          for(let j = 0, len = this.questions.length; j < len; j++){
+            this.questions[j].success = (this.questions[j].myAnswer == this.questions[j].answer);
+            if(this.questions[j].success){
+              this.successNum += 1;
+              this.score += 5;
+            }
+            if(this.questions[j].type == 1){
+              if(this.questions[j].myAnswer == 'A')
+                this.questions[j].selected = '1';
+              if(this.questions[j].myAnswer == 'B')
+                this.questions[j].selected = '2';
+              if(this.questions[j].myAnswer == 'C')
+                this.questions[j].selected = '3';
+              if(this.questions[j].myAnswer == 'D')
+                this.questions[j].selected = '4';
+            }else{
+              if(this.questions[j].myAnswer.indexOf('A') != -1 )
+                this.questions[j].A_selected = true;
+              if(this.questions[j].myAnswer.indexOf('B') != -1)
+                this.questions[j].B_selected = true;
+              if(this.questions[j].myAnswer.indexOf('C') != -1)
+                this.questions[j].C_selected = true;
+              if(this.questions[j].myAnswer.indexOf('D') != -1)
+                this.questions[j].D_selected = true;
+            }
+            this.questions[j].tip = '正确答案：'+this.questions[j].answer+'，'+this.questions[j].analysis;
+          }
+        }
+        else{
+          this.$message({
+            message: '拉取答题信息失败，' + res.data,
+            type: 'warning'
+          })
+        }
+      }).catch(error => {});
       this.nowExamTitle = name;
-      this.nowExamCode = examCode;
       this.dialogTableVisible = true;
     },
-    getPageInfo() {
+    getExamInfo() {
+      let submitData = {
+        sid: 5, // [WARNING] 注意从cookie中获取
+        pageNum: this.pagination.current,
+        pageSize: this.pagination.size
+      }
       // 分页查询考试信息
-      this.$axios(
-        `/api/answers/${this.pagination.current}/${this.pagination.size}`
-      )
-        .then(res => {
-          this.pagination = res.data.data;
-          console.log(res);
-        })
-        .catch(error => {});
+      this.$axios({
+        url: this.webSite + 'Stu/ShowTestFin',
+        method: 'post',
+        data: submitData
+      }).then(res => {
+        if(res.data.code == '200'){
+          this.pagination.records = res.data.data.tests;
+        }
+        else{
+          this.$message({
+            message: '拉取考试信息失败，' + res.data,
+            type: 'warning'
+          })
+        }
+      }).catch(error => {});
+
     },
     //改变当前记录条数
     handleSizeChange(val) {
       this.pagination.size = val;
-      this.getPageInfo();
+      this.getExamInfo();
     },
     //改变当前页码，重新发送请求
     handleCurrentChange(val) {
       this.pagination.current = val;
-      this.getPageInfo();
+      this.getExamInfo();
     },
     tableRowClassName({ row, rowIndex }) {
       if (rowIndex % 2 == 0) {

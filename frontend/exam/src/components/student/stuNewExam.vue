@@ -2,19 +2,22 @@
 描述：学生端组件，查看未完成的考试列表
 作者：211027134 叶怀生
 创建：2022年2月5日14:47:56
-修改：2022年2月6日05:26:49
+修改：2022年2月9日23:53:35
 -->
 <template>
   <div class="exam">
     <el-table :data="pagination.records" border :row-class-name="tableRowClassName">
-      <el-table-column fixed="left" prop="name" label="考试名称" width="240"></el-table-column>
-      <el-table-column prop="start" label="考试开始时间" width="200"></el-table-column>
-      <el-table-column prop="end" label="考试结束时间" width="200"></el-table-column>
+      <el-table-column fixed="left" prop="tname" label="考试名称" width="240"></el-table-column>
+      <el-table-column prop="starttime" label="考试开始时间" width="200"></el-table-column>
+      <el-table-column prop="endtime" label="考试结束时间" width="200"></el-table-column>
       <el-table-column prop="description" label="考试描述" width="550"></el-table-column>
-      <el-table-column prop="author" label="发布人" width="150"></el-table-column>
+      <!--
+        <el-table-column prop="author" label="发布人" width="150"></el-table-column>
+      -->
+      <el-table-column prop="padding" label="" width="150"></el-table-column>
       <el-table-column fixed="right" label="操作" width="150">
         <template slot-scope="scope">
-          <el-button @click="entryExam(scope.row.examCode)" type="primary" size="small">进入考试</el-button>
+          <el-button @click="entryExam(scope.row.id, scope.row.pid)" type="primary" size="small" icon="el-icon-edit-outline">进入考试</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -36,48 +39,50 @@ export default {
   data() {
     return {
       pagination: {
-        records: [{
-          name: '测试数据',
-          start: '2022年2月5日15:03:40',
-          end: '2022年2月5日15:03:48',
-          description: '考试列表测试罢了',
-          author: '老小子',
-          examCode: 123
-        }],
+        records: [],
         //分页后的考试信息
         current: 1, //当前页
         total: null, //记录条数
         size: 6 //每页条数
-      }
+      },
+      webSite: 'http://8.130.16.20:8080/' // 站点地址
     };
   },
   created() {
-    this.getPageInfo();
+    this.getExamInfo();
   },
   methods: {
-    entryExam(examCode) { // 进入考试
-      this.$router.push({path: '/stuTodoExam', query: {examCode: examCode}});
+    entryExam(testId, paperId) { // 进入考试
+      this.$router.push({path: '/stuTodoExam', query: {
+        tid: testId,
+        sid: 5,
+        pid: paperId}});  // [WARNING] 注意从cookie中获取
     },
-    getPageInfo() {
+    getExamInfo() {
+      let submitData = {
+        sid: 5, // [WARNING] 注意从cookie中获取
+        pageNum: this.pagination.current,
+        pageSize: this.pagination.size
+      }
       //分页查询所有试卷信息
-      this.$axios(
-        `/api/answers/${this.pagination.current}/${this.pagination.size}`
-      )
-        .then(res => {
-          this.pagination = res.data.data;
-          console.log(res);
-        })
-        .catch(error => {});
+      this.$axios({
+        url: this.webSite + 'Stu/ShowTest',
+        method: 'post',
+        data: submitData
+      }).then(res => {
+        this.pagination.records = res.data.data.tests;
+      })
+      .catch(error => {});
     },
     //改变当前记录条数
     handleSizeChange(val) {
       this.pagination.size = val;
-      this.getPageInfo();
+      this.getExamInfo();
     },
     //改变当前页码，重新发送请求
     handleCurrentChange(val) {
       this.pagination.current = val;
-      this.getPageInfo();
+      this.getExamInfo();
     },
     tableRowClassName({ row, rowIndex }) {
       if (rowIndex % 2 == 0) {

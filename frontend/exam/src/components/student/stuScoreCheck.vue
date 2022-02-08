@@ -2,7 +2,7 @@
 描述：学生端，查询成绩并显示简单的相关统计信息。
 作者：211027134 叶怀生
 创建：2022年2月6日05:08:19
-修改：2022年2月6日05:26:56
+修改：2022年2月9日23:53:27
 -->
 <template>
   <div class="ScorePage">
@@ -73,16 +73,16 @@ export default {
       }],
       termValue: '1',
       opinionData:[
-        { value: 2, name: '优秀' },
-        { value: 10, name: '良好' },
-        { value: 32, name: '一般' },
-        { value: 4, name: '及格' },
-        { value: 2, name: '不及格' }
+        { value: 0, name: '优秀' },
+        { value: 0, name: '良好' },
+        { value: 0, name: '一般' },
+        { value: 0, name: '及格' },
+        { value: 0, name: '不及格' }
       ]
     }
   },
   methods: {
-    getPageInfo() {
+    getScoreInfo() {
       // 分页查询考试信息
       this.$axios(
         `/api/answers/${this.pagination.current}/${this.pagination.size}`
@@ -96,12 +96,12 @@ export default {
     //改变当前记录条数
     handleSizeChange(val) {
       this.pagination.size = val;
-      this.getPageInfo();
+      this.getScoreInfo();
     },
     //改变当前页码，重新发送请求
     handleCurrentChange(val) {
       this.pagination.current = val;
-      this.getPageInfo();
+      this.getScoreInfo();
     },
     tableRowClassName({ row, rowIndex }) {
       if (rowIndex % 2 == 0) {
