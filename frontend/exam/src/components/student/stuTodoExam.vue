@@ -78,19 +78,21 @@ export default {
       webSite: 'http://8.130.16.20:8080/' // 站点地址
     }
   },
+  // Vue对象内置函数，在此函数处hook，可在页面绘制时执行特定函数
   created() {
     this.tid = this.$route.query.tid; // 获取路由传递的试卷id，用于查询并创建试卷
     this.pid = this.$route.query.pid;
     this.sid = this.$route.query.sid;
     this.totalQuestionNum = 1;
+    // 获取当前试卷的所有题目
     this.getQuestionList();
   },
   methods: {
-    // 进度条回调
+    // Vue进度条组件回调函数，用于根据不同进度显示不同信息
     format(percentage) {
       return percentage === 100 ? '完成' : `${percentage.toFixed(0)}%`;
     },
-    // 获取考试信息列表
+    // 获取考试题目列表
     getQuestionList(){
       if(this.tid >= 0){
         this.$axios({
@@ -100,11 +102,9 @@ export default {
         }).then(res => {
           if(res.data.code == '200'){
             this.questions = res.data.data.questions;
-            console.log('num', this.questions.length);
             this.totalQuestionNum = Math.max(this.questions.length, 1);  // 获取题目数量
             for(let index = 0; index < this.totalQuestionNum; index++){
               this.selectedInfo.push(false);
-              console.log(this.questions[index]);
             }
           }
           else{
@@ -181,7 +181,6 @@ export default {
           ]);
         }
 
-        // [WAIT FIX] 这里的提示有点问题，一直提示失败，即使提交成功。
         this.$msgbox({
           title: '消息',
           message: msgInfo,
@@ -217,7 +216,7 @@ export default {
       })
       this.buttonLoading = false;
     },
-    // 答题回调
+    // 答题回调，用于判断当前考试是否做完所有题目
     selectedMessage(index) {
       var questionType = this.questions[index].type;
       if(questionType == 1){

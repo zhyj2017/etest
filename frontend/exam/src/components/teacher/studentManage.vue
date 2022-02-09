@@ -3,7 +3,7 @@
 作者：211027137 林羽希
 完善：211027134 叶怀生
 创建：unkown
-修改：2022年2月9日17:28:31
+修改：2022年2月10日01:55:11
 -->
 <!--
 [WARNING]
@@ -178,6 +178,7 @@ export default {
       webSite: 'http://8.130.16.20:8080/' // 站点地址
     };
   },
+  // Vue对象内置函数，在此函数处hook，可在页面绘制时执行特定函数
   created() {
     this.getStudentInfo();
   },
@@ -218,6 +219,7 @@ export default {
         password: ''};
       this.addDialogVisible = true
     },
+    // 提交新增学习信息
     submitAdd(){
       this.addDialogVisible = false;
       this.$axios({
@@ -252,7 +254,8 @@ export default {
         smajor: stuData.smajor,
         password: stuData.password};
     },
-    submitEdit() { // 提交学生信息更改
+    // 提交学生信息更改
+    submitEdit() {
       this.editDialogVisible = false
       this.$axios({
         url: this.webSite + 'UpdateStudent',
@@ -308,6 +311,7 @@ export default {
           done();
         }).catch(_ => {});
     },
+    // Vue表格组件回调函数，使表格各行显示不同叠层样式
     tableRowClassName({ row, rowIndex }) {
       if (rowIndex % 2 == 0) {
         return "warning-row";

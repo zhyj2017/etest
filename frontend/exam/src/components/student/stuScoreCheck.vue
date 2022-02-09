@@ -2,7 +2,7 @@
 描述：学生端，查询成绩并显示简单的相关统计信息。
 作者：211027134 叶怀生
 创建：2022年2月6日05:08:19
-修改：2022年2月9日23:53:27
+修改：2022年2月10日00:47:04
 -->
 <template>
   <div class="ScorePage">
@@ -22,9 +22,12 @@
         </el-select>
         <div style="margin-bottom: 14px"></div>
         <el-table :data="pagination.records" border :row-class-name="tableRowClassName">
-          <el-table-column fixed="left" prop="name" label="考试名称" width="240"></el-table-column>
+          <el-table-column fixed="left" prop="tname" label="考试名称" width="240"></el-table-column>
+          <!--
           <el-table-column prop="end" label="考试结束时间" width="200"></el-table-column>
           <el-table-column prop="description" label="考试描述" width="400"></el-table-column>
+          -->
+          <el-table-column prop="end" label=" " width="600"></el-table-column>
           <el-table-column prop="score" label="得分" width="100"></el-table-column>
           <el-table-column fixed="right" prop="state" label="评级" width="100"></el-table-column>
         </el-table>
@@ -51,14 +54,7 @@ export default {
   data() {
     return{
       pagination: {
-        records: [{
-          name: '测试数据',
-          end: '2022年2月5日15:03:48',
-          description: '由小朋友制作的一份超级试卷大礼包',
-          score: 100,
-          state: '优秀',
-          examCode: 123
-        }],
+        records: [],
         //分页后的考试信息
         current: 1, //当前页
         total: null, //记录条数
@@ -78,19 +74,108 @@ export default {
         { value: 0, name: '一般' },
         { value: 0, name: '及格' },
         { value: 0, name: '不及格' }
-      ]
+      ],
+      Color: [],
+      activeColor: [
+        '#ab66dd',
+        '#409EFF',
+        '#67C23A',
+        '#E6A23C',
+        '#F56C6C',
+        '#800000'
+      ],
+      banColor: [
+        '#cccccc',
+        '#cccccc',
+        '#cccccc',
+        '#cccccc',
+        '#cccccc',
+        '#cccccc'
+      ],
+      webSite: 'http://8.130.16.20:8080/' // 站点地址
     }
   },
+  // Vue对象内置函数，在此函数处hook，可在页面绘制时执行特定函数
+  created(){
+    this.Color = this.banColor;
+    // 分页查询成绩信息，并获取所有成绩信息用于成绩分析
+    this.getScoreInfo();
+    this.getALLScoreInfo();
+  },
   methods: {
+    // 分页获取成绩信息
     getScoreInfo() {
-      // 分页查询考试信息
-      this.$axios(
-        `/api/answers/${this.pagination.current}/${this.pagination.size}`
-      )
-        .then(res => {
-          this.pagination = res.data.data;
-          console.log(res);
-        })
+      let submitData = {
+        sid: 5, // [WARNING] 注意从cookie中获取
+        pageNum: this.pagination.current,
+        pageSize: this.pagination.size
+      }
+      // post分页请求
+      this.$axios({
+        url: this.webSite + 'Stu/ShowScore',
+        method: 'post',
+        data: submitData
+      }).then(res => {
+        if(res.data.code == '200'){
+          this.pagination.records = res.data.data.scores;
+          for(let j = 0, len = this.pagination.records.length; j < len; j++){
+            let score = this.pagination.records[j].score;
+            if(score < 60)
+              this.pagination.records[j].state = '不及格';
+            else if(60<= score < 70)
+              this.pagination.records[j].state = '及格';
+            else if(70<= score < 80)
+              this.pagination.records[j].state = '一般';
+            else if(80<= score < 90)
+              this.pagination.records[j].state = '良好';
+            else if(90< score)
+              this.pagination.records[j].state = '优秀';
+            else
+              this.pagination.records[j].state = 'unkown';
+          }
+        }
+        else{
+          this.$message({
+            message: '拉取成绩信息失败，' + res.data,
+            type: 'warning'
+          });
+        }
+      })
+        .catch(error => {});
+    },
+    // 查询所有成绩，进行成绩分析
+    getALLScoreInfo() {
+      let submitData = {
+        sid: 5, // [WARNING] 注意从cookie中获取
+        pageNum: 1,
+        pageSize: 1000
+      }
+      this.$axios({
+        url: this.webSite + 'Stu/ShowScore',
+        method: 'post',
+        data: submitData
+      }).then(res => {
+        if(res.data.code == '200'){
+          let records = res.data.data.scores;
+          for(let j = 0, len = records.length; j < len; j++){
+            let score = records[j].score;
+            let index = parseInt(score/10);
+            if(index < 6)
+              this.opinionData[4].value++;
+            else
+              this.opinionData[Math.max(9-index,0)].value++;
+          }
+          this.Color = this.activeColor;
+        }
+        else{
+          this.$message({
+            message: '拉取所有成绩评级失败，' + res.data,
+            type: 'warning'
+          });
+          this.Color = this.banColor;
+        }
+        this.drawPie('drawing');
+      })
         .catch(error => {});
     },
     //改变当前记录条数
@@ -103,6 +188,7 @@ export default {
       this.pagination.current = val;
       this.getScoreInfo();
     },
+    // Vue表格组件回调函数，使表格各行显示不同叠层样式
     tableRowClassName({ row, rowIndex }) {
       if (rowIndex % 2 == 0) {
         return "warning-row";
@@ -110,12 +196,13 @@ export default {
         return "success-row";
       }
     },
+    // echart插件绘制饼形图
     drawPie(id){
       this.charts = echarts.init(document.getElementById(id))
       this.charts.setOption({
         title: {
           text: '课程考试评级情况',
-          subtext: '评级分布',
+          subtext: '评级分布如下',
           left: 'center'
         },
         tooltip: {
@@ -138,18 +225,13 @@ export default {
                 shadowColor: 'rgba(0, 0, 0, 0.5)'
               }
             },
-            color: [
-              '#ab66dd',
-              '#409EFF',
-              '#67C23A',
-              '#E6A23C',
-              '#F56C6C'
-            ]
+            color: this.Color
           }
         ]
       })
     }
-  },  //调用
+  },
+  // Vue内置函数
   mounted(){
     this.$nextTick(function() {
       this.drawPie('drawing')

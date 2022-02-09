@@ -2,7 +2,7 @@
 描述：学生端组件，查看未完成的考试列表
 作者：211027134 叶怀生
 创建：2022年2月5日14:47:56
-修改：2022年2月9日23:53:35
+修改：2022年2月10日01:41:56
 -->
 <template>
   <div class="exam">
@@ -48,23 +48,26 @@ export default {
       webSite: 'http://8.130.16.20:8080/' // 站点地址
     };
   },
+  // Vue对象内置函数，在此函数处hook，可在页面绘制时执行特定函数
   created() {
+    // 分页获取未完成的考试信息
     this.getExamInfo();
   },
   methods: {
-    entryExam(testId, paperId) { // 进入考试
+    // 进入考试
+    entryExam(testId, paperId) {
       this.$router.push({path: '/stuTodoExam', query: {
         tid: testId,
         sid: 5,
         pid: paperId}});  // [WARNING] 注意从cookie中获取
     },
+    // 分页获取未完成的考试信息
     getExamInfo() {
       let submitData = {
         sid: 5, // [WARNING] 注意从cookie中获取
         pageNum: this.pagination.current,
         pageSize: this.pagination.size
       }
-      //分页查询所有试卷信息
       this.$axios({
         url: this.webSite + 'Stu/ShowTest',
         method: 'post',
@@ -84,6 +87,7 @@ export default {
       this.pagination.current = val;
       this.getExamInfo();
     },
+    // Vue表格组件回调函数，使表格各行显示不同叠层样式
     tableRowClassName({ row, rowIndex }) {
       if (rowIndex % 2 == 0) {
         return "warning-row";

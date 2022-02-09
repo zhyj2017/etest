@@ -2,7 +2,7 @@
 描述：教师端，查看所有教师授课班级的所有成绩
 作者：211027134 叶怀生
 时间：2022年1月30日15:50:32
-修改：2022年2月9日16:59:05
+修改：2022年2月10日01:48:25
 -->
 <template>
   <div class="all">
@@ -124,14 +124,15 @@ export default {
       webSite: 'http://8.130.16.20:8080/' // 站点地址
     };
   },
+  // Vue对象内置函数，在此函数处hook，可在页面绘制时执行特定函数
   created() {
+    // 查询当前教师所管理的所有班级
     this.checkClass(1); // [Wait Fix] 需要改成获取当前用户id，而不是固定id
   },
   methods: {
     // 获取当前选定班级的所有考试
     getClassTestInfo(classId) {
       let submitData = {cid:classId};
-      //分页查询指定班级成绩
       if(classId >= 0)
         this.$axios({
           url: this.webSite+'GetTests',
@@ -148,6 +149,7 @@ export default {
 
         }).catch(error => {});
     },
+    // 查看该次考试的成绩情况
     entryTest(classId, testId, testName){
       this.testPagination.current = 1;
       this.testPagination.size = 6;
@@ -170,6 +172,7 @@ export default {
       this.getClassScoreInfo();
       this.getClassScoreRank();
     },
+    // 分析这次考试所有学生的评级情况
     getClassScoreRank() {
       let submitData = {  // [WARNING] 只用传tid，难道每个班的每次考试都是唯一的吗？
         tid: this.testPagination.currentTid
@@ -193,6 +196,7 @@ export default {
           this.drawPie('drawing');
         }).catch(error => {});
     },
+    // 分页查询指定班级的指定试卷成绩
     getClassScoreInfo() {
       let submitData = {
         cid: this.testPagination.currentCid,
@@ -200,7 +204,6 @@ export default {
         pageNum: this.scorePagination.current,
         pageSize: this.scorePagination.size
       };
-      //分页查询指定班级成绩
       if(submitData.cid >= 0 && submitData.tid >= 0)
         this.$axios({
           url: this.webSite+'ShowScore',
@@ -208,7 +211,6 @@ export default {
           data: submitData
         }).then(res => {
           let resData = res.data.data.scores;
-          console.log('获取班级特定考试成绩', resData);
           if(resData != null && resData.length != 0){
             this.scorePagination.records = resData;
           }
@@ -236,7 +238,8 @@ export default {
       this.scorePagination.current = val;
       this.getClassScoreInfo();
     },
-    handleClose(done) { //关闭提醒
+    //关闭提醒
+    handleClose(done) {
       this.$confirm('确认关闭？')
         .then(_ => {
           done();
@@ -248,7 +251,7 @@ export default {
       // [WARNING] 这里使用的接口最好能提供一个非分页的接口
       let submitData = {aid:varAid,
         pageNum:1,
-        pageSize:6};
+        pageSize:1000};
       this.$axios({
         url: this.webSite+'CheckClass',
         method: 'post',
@@ -259,6 +262,7 @@ export default {
           this.classList = resData;
       })
     },
+    // Vue表格组件回调函数，使表格各行显示不同叠层样式
     tableRowClassName({ row, rowIndex }) {
       if (rowIndex % 2 == 0) {
         return "warning-row";
@@ -266,6 +270,7 @@ export default {
         return "success-row";
       }
     },
+    // echart插件绘制饼形图
     drawPie(id){
       this.charts = echarts.init(document.getElementById(id))
       this.charts.setOption({

@@ -2,7 +2,7 @@
 描述：学生端，查看已完成考试的成绩以及答案详情。
 作者：211027134 叶怀生
 创建：2022年2月5日20:15:05
-修改：2022年2月9日16:58:51
+修改：2022年2月10日01:41:37
 -->
 <template>
   <div class="exam">
@@ -151,11 +151,14 @@ export default {
       webSite: 'http://8.130.16.20:8080/' // 站点地址
     };
   },
+  // Vue对象内置函数，在此函数处hook，可在页面绘制时执行特定函数
   created() {
+    // 分页获取已完成的考试信息
     this.getExamInfo();
   },
   methods: {
-    entryExam(name, testId) { // 查看试卷
+    // 查看试卷
+    entryExam(name, testId) {
       let submitData = {
         sid: 5, // [WARNING] 注意从cookie中获取
         tid: testId
@@ -209,13 +212,13 @@ export default {
       this.nowExamTitle = name;
       this.dialogTableVisible = true;
     },
+    // 分页获取已完成的考试信息
     getExamInfo() {
       let submitData = {
         sid: 5, // [WARNING] 注意从cookie中获取
         pageNum: this.pagination.current,
         pageSize: this.pagination.size
       }
-      // 分页查询考试信息
       this.$axios({
         url: this.webSite + 'Stu/ShowTestFin',
         method: 'post',
@@ -233,16 +236,17 @@ export default {
       }).catch(error => {});
 
     },
-    //改变当前记录条数
+    // 改变当前记录条数
     handleSizeChange(val) {
       this.pagination.size = val;
       this.getExamInfo();
     },
-    //改变当前页码，重新发送请求
+    // 改变当前页码，重新发送请求
     handleCurrentChange(val) {
       this.pagination.current = val;
       this.getExamInfo();
     },
+    // Vue表格组件回调函数，使表格各行显示不同叠层样式
     tableRowClassName({ row, rowIndex }) {
       if (rowIndex % 2 == 0) {
         return "warning-row";
